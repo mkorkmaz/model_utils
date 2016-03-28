@@ -29,7 +29,7 @@ To define a relation with other documents like foreign key. Not used in the clas
 ###\_has_many:
 To define a relation with other documents that defined as child documents. Not used in the class but can be used executing database operations.
 
-See [test.php](https://github.com/mkorkmaz/model_utils/blob/master/test.php) for sample model definition.
+See [test.php](https://github.com/mkorkmaz/model_utils/blob/master/test/test.php) for sample model definition.
 
 
 ## ModelUtils::validate\_doc
@@ -46,13 +46,25 @@ Can be used for fixing and sanitising partial documents. Can be used before upda
 Can be used for fitting partial document according to model definition. Can be be used before both inserting or updating documents.
 
 
+## Installation
+
+It's recommended that you use [Composer](https://getcomposer.org/) to install ModelUtils.
+
+```bash
+$ composer require mkorkmaz/model_utils ">=1.0"
+```
+
+This will install ModelUtils and all required dependencies. ModelUtils requires PHP 5.5.0 or newer.
+
 ## Usage
 ```
+use ModelUtils\ModelUtils as ModelUtils;
+
 $doc = ModelUtils::fit_doc_to_model($model, $doc);
 $doc = ModelUtils::setting_model_defaults($model, $doc);
 ModelUtils::validate_doc($model, $doc);
 ```
-See also [test.php](https://github.com/mkorkmaz/model_utils/blob/master/test.php)
+See also [test.php](https://github.com/mkorkmaz/model_utils/blob/master/test/test.php)
 
 ## Contribute
 * Open issue if found bugs or sent pull request.
