@@ -18,8 +18,8 @@
     },
     
     "autoload": {
-        "psr-0": {
-            "ModelUtils": "src/"
+        "psr-4": {
+            "ModelUtils\\": "src/"
         }
     },
     "scripts": {
