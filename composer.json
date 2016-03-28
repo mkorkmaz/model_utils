@@ -1,0 +1,33 @@
+{
+    "name": "mkorkmaz/model_utils",
+    "type": "library",
+    "description": "A simple PHP class for validating variable types, fixing, sanitising and setting default values for a model definition encoded as an array.",
+    "keywords": ["utility","model"],
+    "homepage": "https://github.com/mkorkmaz/model_utils",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mehmet Korkmaz",
+            "email": "mehmet@mkorkmaz.com",
+            "homepage": "https://mkorkmaz.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0"
+        
+    },
+    
+    "autoload": {
+        "psr-0": {
+            "ModelUtils": "src/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "php vendor/bin/phpcs",
+            "php vendor/bin/phpunit"
+        ],
+        "phpunit": "php vendor/bin/phpunit",
+        "phpcs": "php vendor/bin/phpcs"
+    }
+}

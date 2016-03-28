@@ -3,15 +3,15 @@
  * ModelUtils: A simple PHP class for validating variable types, fixing, sanitising and setting default values for a model definition encoded as an array.
 *
 *  @ver: 0.2
-*  @author: mehmet@mkorkmaz.com
-*  created at: 2016-03-13
-*  updated at: 2016-03-20
+*  @author: mkorkmaz <mehmet@mkorkmaz.com>
 *  
 *  @TODO: There is no full testing script. A test script that covers all posibilities is needed.
 *  @TODO: A doc item can be array that has multiple values, implement validation and sanitization for the situations like this.
 *  @TODO: Detailed validation,sanitization and setting default value for all types. 
 *  @TODO: Detailed documentation is needed
 */
+
+namespace ModelUtils;
 
 class ModelUtils {
 

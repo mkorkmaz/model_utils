@@ -1,6 +1,7 @@
 <?php 
 
-require(__DIR__ . "/model_utils.php");
+require( dirname(__DIR__) . "/src/ModelUtils.php");
+use ModelUtils\ModelUtils as ModelUtils;
 
 $mdl =<<<EOT
 {
