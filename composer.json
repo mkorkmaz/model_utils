@@ -10,6 +10,11 @@
             "name": "Mehmet Korkmaz",
             "email": "mehmet@mkorkmaz.com",
             "homepage": "https://mkorkmaz.com"
+        },
+        {
+            "name": "Haydar KULEKCI",
+            "email": "haydarkulekci@gmail.com",
+            "homepage": "https://kulekci.net"
         }
     ],
     "require": {
