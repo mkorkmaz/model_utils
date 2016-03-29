@@ -51,10 +51,10 @@ Can be used for fitting partial document according to model definition. Can be b
 It's recommended that you use [Composer](https://getcomposer.org/) to install ModelUtils.
 
 ```bash
-$ composer require mkorkmaz/model_utils ">=1.0"
+$ composer require mkorkmaz/model_utils "~1.0"
 ```
 
-This will install ModelUtils and all required dependencies. ModelUtils requires PHP 5.5.0 or newer.
+This will install ModelUtils and all required dependencies. ModelUtils requires PHP 5.4.0 or newer.
 
 ## Usage
 ```
