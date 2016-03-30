@@ -89,7 +89,9 @@ EOT;
     public function failureDataProvider()
     {
         return [
-            ['{"name": "Mehmet", "birthday": "19800101","gender":"G",  "experience": 4, "profile": {"weight":60.0,"age": 37,"pets": {"cat": 2}}}'],
+            ['{"name": "Mehmet", "birthday": "19800101","gender":"G","experience": 4, "profile": {"weight":60.0,"age": 37,"pets": {"cat": 2}}}'],
+            ['{"name": ["Mehmet"], "birthday": "1980-01-01","gender":"G","experience": 4, "profile": {"weight":60.0,"age": 37,"pets": {"cat": 2}}}'],
+            ['{"name": "Mehmet"}'],
         ];
     }
 }
