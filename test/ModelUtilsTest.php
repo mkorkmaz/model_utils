@@ -8,7 +8,7 @@
  */
 namespace tests;
 
-use ModelUtils\ModelUtils;
+use \ModelUtils\ModelUtils;
 
 class ModelUtilsTest extends \PHPUnit_Framework_TestCase
 {
