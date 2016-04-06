@@ -4,7 +4,6 @@
  * model definition encoded as an array.
  * *
  *  @TODO: A doc item can be array that has multiple values, implement validation and sanitization for the situations like this.
- *  @TODO: Detailed validation,sanitization and setting default value for all types.
  *  @TODO: Detailed documentation is needed
  */
 
@@ -120,7 +119,36 @@ class ModelUtils
             if (in_array("_type", $item_keys)) {
                 // If array does not have this key, set the default value.
                 if (! isset($my_doc[$key])) {
-                    $new_doc[$key] = $my_model[$key]['_default'];
+                    if(isset($my_model[$key]['_input_type'])){
+                		switch ($my_model[$key]['_input_type']){
+                			case 'date':
+                				if($my_model[$key]['_default']=='today'){
+                					$new_doc[$key] = date("Y-m-d");
+                				}
+                				else{
+                					$new_doc[$key]=$my_model[$key]['_default'];
+                				}
+                				break;
+                			case 'datetime':
+                				if($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="integer")){
+                					$new_docc[$key] = time();
+                				}
+                				else if($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")){
+                					
+                					$new_doc[$key] = date("Y-m-d H:i:s");
+                				}
+                				else{
+                					$new_doc[$key]=$my_model[$key]['_default'];
+                				}
+                				break;
+                	
+                			default:
+                				$new_doc[$key]=$my_model[$key]['_default'];
+                		}
+                	}
+                	else{
+                		$new_doc[$key]=$my_model[$key]['_default'];
+                	}
                 }                
                 // If array has this key
                 else {
@@ -143,7 +171,6 @@ class ModelUtils
                 $new_doc[$key] = ModelUtils::setting_model_defaults($my_model[$key], $my_doc[$key]);
             }
         }
-
         return $new_doc;
     }
 
