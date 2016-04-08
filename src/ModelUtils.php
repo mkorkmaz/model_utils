@@ -9,6 +9,8 @@
 
 namespace ModelUtils;
 
+use Crisu83\ShortId\ShortId;
+
 class ModelUtils
 {
     /**
@@ -121,6 +123,10 @@ class ModelUtils
                 if (! isset($my_doc[$key])) {
                     if(isset($my_model[$key]['_input_type'])){
                 		switch ($my_model[$key]['_input_type']){
+                            case 'uid':
+                                    $shortid = ShortId::create();
+                                    $new_doc[$key]=$shortid->generate();
+                                break;
                 			case 'date':
                 				if($my_model[$key]['_default']=='today'){
                 					$new_doc[$key] = date("Y-m-d");
@@ -129,9 +135,9 @@ class ModelUtils
                 					$new_doc[$key]=$my_model[$key]['_default'];
                 				}
                 				break;
-                			case 'datetime':
-                				if($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="integer")){
-                					$new_docc[$key] = time();
+                			case 'timestamp':
+                				if(($my_model[$key]['_default']=="now") && ($my_model[$key]['_type'] == "integer")){
+                					$new_doc[$key] = time();
                 				}
                 				else if($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")){
                 					
@@ -212,7 +218,7 @@ class ModelUtils
                     }
                     break;
                 case 'url':
-                    return filter_var($value, FILTER_VALIDATE_URL);
+                    $filter_check = filter_var($value, FILTER_VALIDATE_URL);
                     if ($filter_check === false) {
                         throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
                             "validation: INVALID_URL ");
