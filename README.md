@@ -1,5 +1,5 @@
 # ModelUtils
-[![Build Status](https://travis-ci.org/mkorkmaz/model_utils.svg?branch=master)](https://travis-ci.org/mkorkmaz/model_utils)
+[![Circle CI](https://circleci.com/gh/mkorkmaz/model_utils.svg?style=shield)](https://circleci.com/gh/mkorkmaz/model_utils)
 [![Latest Stable Version](https://poser.pugx.org/mkorkmaz/model_utils/v/stable)](https://packagist.org/packages/mkorkmaz/model_utils) [![Total Downloads](https://poser.pugx.org/mkorkmaz/model_utils/downloads)](https://packagist.org/packages/mkorkmaz/model_utils) [![Latest Unstable Version](https://poser.pugx.org/mkorkmaz/model_utils/v/unstable)](https://packagist.org/packages/mkorkmaz/model_utils) [![License](https://poser.pugx.org/mkorkmaz/model_utils/license)](https://packagist.org/packages/mkorkmaz/model_utils)
 
 
