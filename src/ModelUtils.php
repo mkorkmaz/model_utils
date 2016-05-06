@@ -66,7 +66,6 @@ class ModelUtils
                 $my_doc[$key] = ModelUtils::validate_doc_item($my_doc[$key], $my_model[$key], $v_key);
             }
         }
-
         return $my_doc;
     }
 
@@ -94,7 +93,7 @@ class ModelUtils
                 }
             }
             elseif (ModelUtils::gettype($my_doc[$key]) == "array" && $my_model[$key]['_type'] !="array") {
-            	$my_doc[$key]=$my_model[$key]['_default'];
+                $my_doc[$key]=$my_model[$key]['_default'];
             }
             // If array[key] is not an array and not has same variable type that stated in the model definition.
             else {
@@ -122,47 +121,47 @@ class ModelUtils
                 // If array does not have this key, set the default value.
                 if (! isset($my_doc[$key])) {
                     if(isset($my_model[$key]['_input_type'])){
-                		switch ($my_model[$key]['_input_type']){
+                        switch ($my_model[$key]['_input_type']){
                             case 'uid':
                                     $shortid = ShortId::create();
                                     $new_doc[$key]=$shortid->generate();
                                 break;
-                			case 'date':
-                				if($my_model[$key]['_default']=='today'){
-                					$new_doc[$key] = date("Y-m-d");
-                				}
-                				else{
-                					$new_doc[$key]=$my_model[$key]['_default'];
-                				}
-                				break;
-                			case 'timestamp':
-                				if(($my_model[$key]['_default']=="now") && ($my_model[$key]['_type'] == "integer")){
-                					$new_doc[$key] = time();
-                				}
-                				else if($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")){
-                					
-                					$new_doc[$key] = date("Y-m-d H:i:s");
-                				}
-                				else{
-                					$new_doc[$key]=$my_model[$key]['_default'];
-                				}
-                				break;
-                	
-                			default:
-                				$new_doc[$key]=$my_model[$key]['_default'];
-                		}
-                	}
-                	else{
-                		$new_doc[$key]=$my_model[$key]['_default'];
-                	}
+                            case 'date':
+                                if($my_model[$key]['_default']=='today'){
+                                    $new_doc[$key] = date("Y-m-d");
+                                }
+                                else{
+                                    $new_doc[$key]=$my_model[$key]['_default'];
+                                }
+                                break;
+                            case 'timestamp':
+                                if(($my_model[$key]['_default']=="now") && ($my_model[$key]['_type'] == "integer")){
+                                    $new_doc[$key] = time();
+                                }
+                                else if($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")){
+                                    
+                                    $new_doc[$key] = date("Y-m-d H:i:s");
+                                }
+                                else{
+                                    $new_doc[$key]=$my_model[$key]['_default'];
+                                }
+                                break;
+                    
+                            default:
+                                $new_doc[$key]=$my_model[$key]['_default'];
+                        }
+                    }
+                    else{
+                        $new_doc[$key]=$my_model[$key]['_default'];
+                    }
                 }                
                 // If array has this key
                 else {
                     // If model definition stated this key's default value is not Null and has a wrong variable type, fix it.
                     if ($my_model[$key]['_default'] !== null) {
-                    	if(ModelUtils::gettype($my_doc[$key]) != $my_model[$key]['_type'] && ModelUtils::gettype($my_doc[$key]) == "array"){
-                    		$my_doc[$key]=$my_model[$key]['_default'];
-                    	}
+                        if(ModelUtils::gettype($my_doc[$key]) != $my_model[$key]['_type'] && ModelUtils::gettype($my_doc[$key]) == "array"){
+                            $my_doc[$key]=$my_model[$key]['_default'];
+                        }
                         settype($my_doc[$key], $my_model[$key]['_type']);
                     }
                     $new_doc[$key] = $my_doc[$key];

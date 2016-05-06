@@ -4,32 +4,40 @@ namespace ModelUtils;
 
 class Model{
 
-    public $config = [];
+    public $config_yaml ="";
+    public $schema = [];
+    public $type ="basic"; // ["basic","cache","search"]
+    public $collection_name = "";
     public $data_file = null;
 
     public function __construct(){
-        $this->config = json_decode(trim($this->config_str), true);
+        $config = yaml_parse(trim($this->config_yaml));
+        $this->schema = $config['schema'];
+        $this->collection_name = $config['collection_name'];
+        $this->type = (isset($config['type'])) ? $config['type'] : "basic";
+        $this->data_file = (isset($config['data_file'])) ? $config['data_file'] : null;
+        var_dump($this->collection_name);
     }
 
     public function validate($doc){
-        return ModelUtils::validate_doc($this->config, $doc);
+        return ModelUtils::validate_doc($this->schema, $doc);
     }
 
     public function set_defaults($doc){
-        return ModelUtils::setting_model_defaults($this->config, $doc);
+        return ModelUtils::setting_model_defaults($this->schema, $doc);
     }
 
 
     public function fit_doc($doc){
-        return ModelUtils::fit_doc_to_model($this->config, $doc);
+        return ModelUtils::fit_doc_to_model($this->schema, $doc);
     }
 
     public function install($db){
 
-        $db->drop($this->collection_name, $this->config);
-        $db->create($this->collection_name, $this->config);
+        $db->drop($this->collection_name, $this->schema);
+        $db->create($this->collection_name, $this->schema);
         $indexes =[];
-        foreach ($this->config as $field=>$fconfig){
+        foreach ($this->schema as $field=>$fconfig){
             if($fconfig['_index']===true){
                 $index=['key'=>[$field=>1]];
                 if(isset($fconfig["_index_type"])){
@@ -46,8 +54,8 @@ class Model{
             if(file_exists(BASE_DIR.$this->data_file)){
                 $data = json_decode(file_get_contents(BASE_DIR.$this->data_file),true);
                 foreach ($data as $item){
-                    $item = ModelUtils::setting_model_defaults($this->config, $item);
-                    $doc = ModelUtils::validate_doc($this->config, $item);
+                    $item = ModelUtils::setting_model_defaults($this->schema, $item);
+                    $doc = ModelUtils::validate_doc($this->schema, $item);
                     $db->insert($this->collection_name,$doc);
                 }
             }
