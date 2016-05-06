@@ -1,7 +1,7 @@
 # ModelUtils
 [![Circle CI](https://circleci.com/gh/mkorkmaz/model_utils.svg?style=shield)](https://circleci.com/gh/mkorkmaz/model_utils)
 [![Latest Stable Version](https://poser.pugx.org/mkorkmaz/model_utils/v/stable)](https://packagist.org/packages/mkorkmaz/model_utils) [![Total Downloads](https://poser.pugx.org/mkorkmaz/model_utils/downloads)](https://packagist.org/packages/mkorkmaz/model_utils) [![Latest Unstable Version](https://poser.pugx.org/mkorkmaz/model_utils/v/unstable)](https://packagist.org/packages/mkorkmaz/model_utils) [![License](https://poser.pugx.org/mkorkmaz/model_utils/license)](https://packagist.org/packages/mkorkmaz/model_utils)
-
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mkorkmaz/model_utils/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mkorkmaz/model_utils/?branch=master)
 
 A simple PHP class for validating variable types, fixing, sanitising and setting default values for a model definition encoded as an array. Can be used before inserting or updating documents. 
 

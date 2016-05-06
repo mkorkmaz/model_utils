@@ -1,9 +1,9 @@
 <?php
 /**
  * ModelUtils: A simple PHP class for validating variable types, fixing, sanitising and setting default values for a
- * model definition encoded as an array.
+ * model definition encoded as an array . 
  * *
- *  @TODO: A doc item can be array that has multiple values, implement validation and sanitization for the situations like this.
+ *  @TODO: A doc item can be array that has multiple values, implement validation and sanitization for the situations like this . 
  *  @TODO: Detailed documentation is needed
  */
 
@@ -26,40 +26,40 @@ class ModelUtils
     {
         $my_keys = array_keys($my_doc);
         foreach ($my_keys as $key) {
-            // Does doc has a array that does not exist in model definition.
+            // Does doc has a array that does not exist in model definition . 
             if (!isset($my_model[$key])) {
                 if ($my_key !== null) {
-                    $my_key = strval($my_key) . "." . strval($key);
+                    $my_key = strval($my_key) . " . " . strval($key);
                 } else {
                     $my_key = $key;
                 }
                 throw new \Exception("Error for key '" . $my_key . "' that does not exist in the model");
             }
-            // Is the value of the array[key] again another array?.
+            // Is the value of the array[key] again another array? . 
             elseif (ModelUtils::gettype($my_doc[$key]) == "array") {
                 if ($my_key !== null) {
-                    $my_key = strval($my_key) . "." . strval($key);
+                    $my_key = strval($my_key) . " . " . strval($key);
                 } else {
                     $my_key = $key;
                 }
-                // Validate this array too.
+                // Validate this array too . 
                 $my_doc[$key] = ModelUtils::validate_doc($my_model[$key], $my_doc[$key], $my_key);
                 if (ModelUtils::gettype($my_doc[$key]) != "array") {
                     return $my_doc[$key];
                 }
             }
-            // Does the value of the array[key] have same variable type that stated in the definition of the model array.
+            // Does the value of the array[key] have same variable type that stated in the definition of the model array . 
             elseif (ModelUtils::gettype($my_doc[$key]) != $my_model[$key]['_type']) {
                 if ($my_key !== null) {
-                    $my_key = $my_key . "." . $key;
+                    $my_key = $my_key . " . " . $key;
                 } else {
                     $my_key = $key;
                 }
-                throw new \Exception("Error for key '" . $my_key . "'" . ", " . ModelUtils::gettype($my_doc[$key]) .
+                throw new \Exception("Error for key '" . $my_key . "'" . ", " . ModelUtils::gettype($my_doc[$key]) . 
                     " given but it must be " . $my_model[$key]['_type']);
             } else {
                 if ($my_key !== null) {
-                    $v_key = $my_key . "." . $key;
+                    $v_key = $my_key . " . " . $key;
                 } else {
                     $v_key = $key;
                 }
@@ -80,14 +80,14 @@ class ModelUtils
     {
         $my_keys = array_keys($my_doc);
         foreach ($my_keys as $key) {
-            // If array has a key that is not presented in the model definition, unset it.
+            // If array has a key that is not presented in the model definition, unset it . 
             if (! isset($my_model[$key])) {
                 unset($my_doc[$key]);
             }
-            // If array[$key] is again an array, recursively fit this array too.
+            // If array[$key] is again an array, recursively fit this array too . 
             elseif (ModelUtils::gettype($my_doc[$key]) == "array" && !isset($my_model[$key]['_type'])) {
                 $my_doc[$key] = ModelUtils::fit_doc_to_model($my_model[$key], $my_doc[$key]);
-                // If returned value is not an array, return it.
+                // If returned value is not an array, return it . 
                 if (ModelUtils::gettype($my_doc[$key]) != "array") {
                     return $my_doc[$key];
                 }
@@ -95,7 +95,7 @@ class ModelUtils
             elseif (ModelUtils::gettype($my_doc[$key]) == "array" && $my_model[$key]['_type'] !="array") {
                 $my_doc[$key]=$my_model[$key]['_default'];
             }
-            // If array[key] is not an array and not has same variable type that stated in the model definition.
+            // If array[key] is not an array and not has same variable type that stated in the model definition . 
             else {
                 $my_doc[$key] = ModelUtils::sanitize_doc_item($my_doc[$key], $my_model[$key]);
             }
@@ -118,31 +118,31 @@ class ModelUtils
             $item_keys = array_keys($my_model[$key]);
             // If one of the keys of $my_model[$key] is _type this is a definition, not a defined key
             if (in_array("_type", $item_keys)) {
-                // If array does not have this key, set the default value.
+                // If array does not have this key, set the default value . 
                 if (! isset($my_doc[$key])) {
-                    if(isset($my_model[$key]['_input_type'])){
-                        switch ($my_model[$key]['_input_type']){
+                    if (isset($my_model[$key]['_input_type'])) {
+                        switch ($my_model[$key]['_input_type']) {
                             case 'uid':
                                     $shortid = ShortId::create();
                                     $new_doc[$key]=$shortid->generate();
                                 break;
                             case 'date':
-                                if($my_model[$key]['_default']=='today'){
+                                if ($my_model[$key]['_default']=='today') {
                                     $new_doc[$key] = date("Y-m-d");
                                 }
-                                else{
+                                else {
                                     $new_doc[$key]=$my_model[$key]['_default'];
                                 }
                                 break;
                             case 'timestamp':
-                                if(($my_model[$key]['_default']=="now") && ($my_model[$key]['_type'] == "integer")){
+                                if (($my_model[$key]['_default']=="now") && ($my_model[$key]['_type'] == "integer")) {
                                     $new_doc[$key] = time();
                                 }
-                                else if($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")){
+                                else if ($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")) {
                                     
                                     $new_doc[$key] = date("Y-m-d H:i:s");
                                 }
-                                else{
+                                else {
                                     $new_doc[$key]=$my_model[$key]['_default'];
                                 }
                                 break;
@@ -151,15 +151,15 @@ class ModelUtils
                                 $new_doc[$key]=$my_model[$key]['_default'];
                         }
                     }
-                    else{
+                    else {
                         $new_doc[$key]=$my_model[$key]['_default'];
                     }
                 }                
                 // If array has this key
                 else {
-                    // If model definition stated this key's default value is not Null and has a wrong variable type, fix it.
+                    // If model definition stated this key's default value is not Null and has a wrong variable type, fix it . 
                     if ($my_model[$key]['_default'] !== null) {
-                        if(ModelUtils::gettype($my_doc[$key]) != $my_model[$key]['_type'] && ModelUtils::gettype($my_doc[$key]) == "array"){
+                        if (ModelUtils::gettype($my_doc[$key]) != $my_model[$key]['_type'] && ModelUtils::gettype($my_doc[$key]) == "array") {
                             $my_doc[$key]=$my_model[$key]['_default'];
                         }
                         settype($my_doc[$key], $my_model[$key]['_type']);
@@ -168,7 +168,7 @@ class ModelUtils
                 }
                 $new_doc[$key] = ModelUtils::sanitize_doc_item($new_doc[$key], $my_model[$key]);
             }            
-            // If one of the keys is not _type, this is a defined key, recursively get sub keys.
+            // If one of the keys is not _type, this is a defined key, recursively get sub keys . 
             else {
                 if (! isset($my_doc[$key])) {
                     $my_doc[$key] = "";
@@ -205,21 +205,21 @@ class ModelUtils
                 case 'mail':
                     $filter_check = filter_var($value, FILTER_VALIDATE_EMAIL);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_EMAIL_ADDRESS ");
                     }
                     break;
                 case 'bool':
                     $filter_check = filter_var($value, FILTER_VALIDATE_BOOLEAN);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_BOOLEAN_VALUE ");
                     }
                     break;
                 case 'url':
                     $filter_check = filter_var($value, FILTER_VALIDATE_URL);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_URL ");
                     }
                     break;
@@ -229,14 +229,14 @@ class ModelUtils
                 case 'ip':
                     $filter_check = filter_var($value, FILTER_VALIDATE_IP);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_IP_ADDRESS ");
                     }
                     break;
                 case 'mac_address':
                     $filter_check = filter_var($value, FILTER_VALIDATE_MAC);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_MAC_ADDRESS ");
                     }
                     break;
@@ -244,7 +244,7 @@ class ModelUtils
                     $regex        = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_FORMAT ");
                     }
                     break;
@@ -252,7 +252,7 @@ class ModelUtils
                     $regex        = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_FORMAT ");
                     }
                     break;
@@ -260,14 +260,14 @@ class ModelUtils
                     $regex        = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the validation: INVALID_FORMAT ");
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the validation: INVALID_FORMAT ");
                     }
                     break;
                 case 'regex':
-                    $regex        = "/^".$format."$/";
+                    $regex        = "/^" . $format . "$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_FORMAT ");
                     }
                     break;
@@ -278,36 +278,36 @@ class ModelUtils
             case 'float':
                 if ($min_length !== null) {
                     if ($value < $min_length) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
-                            "validation: Must be bigger than ".$min_length."  ");
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                            "validation: Must be bigger than " . $min_length . "  ");
                     }
                 }
                 if ($max_length !== null) {
                     if ($value > $max_length) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
-                            "validation: Must be smallerr than ".$max_length."  ");
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                            "validation: Must be smallerr than " . $max_length . "  ");
                     }
                 }
                 break;
             default:
                 if ($max_length !== null) {
                     if (strlen($value) > $max_length) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
-                            "validation: It's length must be smaller than ".$max_length."  ");
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                            "validation: It's length must be smaller than " . $max_length . "  ");
                     }
                 }
                 if ($min_length !== null) {
                     if (strlen($value) < $min_length) {
-                        throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the ".
-                            "validation: It's length must be longer than ".$min_length."  ");
+                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                            "validation: It's length must be longer than " . $min_length . "  ");
                     }
                 }
                 break;
         }
         if ($in_options !== null) {
             if (!in_array($value, $in_options)) {
-                throw new \Exception("Error for value '" . $value . "' for '".$key."' couldn't pass the validation: ".
-                    "It's length must be one of the these values: ".implode(",", $in_options)."  ");
+                throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the validation: " . 
+                    "It's length must be one of the these values: " . implode(", ", $in_options) . "  ");
             }
         }
 
@@ -367,7 +367,7 @@ class ModelUtils
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     break;
                 case 'regex':
-                    $regex        = "/^".$format."$/";
+                    $regex        = "/^" . $format . "$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     break;
                 default:
@@ -400,7 +400,7 @@ class ModelUtils
         }
         if ($in_options !== null) {
             if (!in_array($value, $in_options)) {
-                $value = $in_options[0]; // First value of the in_options array is assumed to be the default value.
+                $value = $in_options[0]; // First value of the in_options array is assumed to be the default value . 
             }
         }
 
@@ -410,7 +410,7 @@ class ModelUtils
     /**
      * A Note:
      * Since the built-in php function gettype returns "double" variabe type, here is the workaround function
-     * See http://php.net/manual/en/function.gettype.php => Possible values for the returned string are:
+     * See http://php . net/manual/en/function . gettype . php => Possible values for the returned string are:
      * "double" (for historical reasons "double" is returned in case of a float, and not simply "float")
      *
      * @param mixed     $value
