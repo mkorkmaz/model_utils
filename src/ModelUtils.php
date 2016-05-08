@@ -331,44 +331,14 @@ class ModelUtils
 
         if ($input_type !== null) {
             switch ($input_type) {
-                case 'mail':
-                    $value= filter_var($value, FILTER_SANITIZE_EMAIL);
-                    break;
                 case 'timestamp':
                     if ($value=='now') {
                         $value = time();
                     }
                     break;
-                case 'bool':
-                    $filter_check = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-                    break;
-                case 'url':
-                    return filter_var($value, FILTER_VALIDATE_URL);
-                    break;
                 case 'html':
-                    $filter_check = $value;
+                    $value = $value;
                     break;
-                case 'ip':
-                    $filter_check = filter_var($value, FILTER_VALIDATE_IP);
-                    break;
-                case 'mac_address':
-                    $filter_check = filter_var($value, FILTER_VALIDATE_MAC);
-                    break;
-                case 'date':
-                    $regex        = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
-                    $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
-                    break;
-                case 'time':
-                    $regex        = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
-                    $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
-                    break;
-                case 'datetime':
-                    $regex        = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
-                    $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
-                    break;
-                case 'regex':
-                    $regex        = "/^" . $format . "$/";
-                    $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     break;
                 default:
                     $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
