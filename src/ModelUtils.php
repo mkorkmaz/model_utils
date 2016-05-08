@@ -29,21 +29,19 @@ class ModelUtils
         foreach ($my_keys as $key) {
             
             $my_doc_key_type = self::getType($my_doc[$key]);
-            
-            // Does doc has a array that does not exist in model definition .
+            $v_key = $key;
+            // Does doc has a array that does not exist in model definition.
             if (!isset($my_model[$key])) {
-                $v_key = $key;
                 if ($my_key !== null) {
                     $v_key = strval($my_key).".".strval($key);
                 }
                 throw new \Exception("Error for key '".$v_key."' that does not exist in the model");
             } // Is the value of the array[key] again another array? .
             elseif ($my_doc_key_type == "array") {
-                $v_key = $key;
                 if ($my_key !== null) {
                     $v_key = strval($my_key).".".strval($key);
                 }
-                // Validate this array too .
+                // Validate this array too.
                 $my_doc[$key] = self::validateDoc($my_model[$key], $my_doc[$key], $v_key);
                 if (self::getType($my_doc[$key]) != "array") {
                     return $my_doc[$key];
@@ -51,14 +49,12 @@ class ModelUtils
             } // Is the value of the array[key] have same variable type
               //that stated in the definition of the model array.
             elseif ($my_doc_key_type != $my_model[$key]['_type']) {
-                $v_key = $key;
                 if ($my_key !== null) {
                     $v_key = $my_key." . ".$key;
                 }
                 throw new \Exception("Error for key '".$v_key."'".", ".$my_doc_key_type.
                     " given but it must be ".$my_model[$key]['_type']);
             } else {
-                $v_key = $key;
                 if ($my_key !== null) {
                     $v_key = $my_key." . ".$key;
                 }
@@ -305,8 +301,8 @@ class ModelUtils
         $max_length = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
         $in_options = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
         $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        if(($input_type == 'timestamp') && ($value == 'now')){
-                $value = time();
+        if (($input_type == 'timestamp') && ($value == 'now')) {
+            $value = time();
         }
         settype($value, $type);
         $value = self::setMaxMinInOptions($type, $value, $min_length, $max_length, $in_options);
