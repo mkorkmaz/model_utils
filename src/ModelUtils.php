@@ -91,18 +91,12 @@ class ModelUtils
         if ($input_type !== null) {
             self::filterValidate($input_type, $key, $value, $format);
         }
-        self::checkMinMax($type, $key, $value, $min_length, $max_length);
-        if ($in_options !== null) {
-            if (!in_array($value, $in_options)) {
-                throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the validation: ".
-                    "It's length must be one of the these values: ".implode(", ", $in_options)."  ");
-            }
-        }
-    
+        self::checkMinMaxInOptions($type, $key, $value, $min_length, $max_length, $in_options);
         return $value;
     }
     
-    private static function checkMinMax($type, $key, $value, $min_length, $max_length){
+    private static function checkMinMaxInOptions($type, $key, $value, $min_length, $max_length, $in_options)
+    {
         switch ($type) {
             case 'integer':
             case 'float':
@@ -118,7 +112,7 @@ class ModelUtils
                 break;
             default:
                 if ($max_length !== null && (strlen($value)>$max_length)) {
-                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the " .
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                         "validation: It's length must be smaller than ".$max_length."  ");
                 }
                 if ($min_length !== null && (strlen($value)<$min_length)) {
@@ -126,6 +120,10 @@ class ModelUtils
                         "validation: It's length must be longer than ".$min_length."  ");
                 }
                 break;
+        }
+        if ($in_options !== null && (!in_array($value, $in_options))) {
+            throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the validation: ".
+                "It's length must be one of the these values: ".implode(", ", $in_options)."  ");
         }
     }
     
@@ -321,18 +319,12 @@ class ModelUtils
         }
         settype($value, $type);
         
-        $value = self::setMaxMin($type, $value, $min_length, $max_length);
-
-        if ($in_options !== null) {
-            if (!in_array($value, $in_options)) {
-                $value = $in_options[0]; // First value of the in_options array is assumed to be the default value .
-            }
-        }
-
+        $value = self::setMaxMinInOptions($type, $value, $min_length, $max_length, $in_options);
         return $value;
     }
     
-    private static function setMaxMin($type, $value, $min_length, $max_length){
+    private static function setMaxMinInOptions($type, $value, $min_length, $max_length, $in_options)
+    {
         switch ($type) {
             case 'integer':
             case 'float':
@@ -342,15 +334,18 @@ class ModelUtils
                 if ($max_length !== null && ($value>$max_length)) {
                     $value = $max_length;
                 }
-                return $value;
+                break;
             case 'string':
                 if ($max_length !== null && strlen($value)>$max_length ) {
                     $value = substr($value, 0, $max_length);
                 }
-                return $value;
-            default:
-                return $value;
+                break;
+
         }
+        if ($in_options !== null && (!in_array($value, $in_options))) {
+            $value = $in_options[0]; // First value of the in_options array is assumed to be the default value .
+        }
+        return $value;
     }
     /**
      * A Note:
