@@ -50,7 +50,7 @@ class ModelUtils
             // Does doc has a array that does not exist in model definition.
             if (!isset($my_model[$key])) {
                 throw new \Exception("Error for key '".$v_key."' that does not exist in the model");
-            } // Is the value of the array[key] again another array? .
+            } // Is the value of the array[key] again another array?
             elseif ($my_doc_key_type == "array") {
                 // Validate this array too.
                 $my_doc[$key] = self::validateDoc($my_model[$key], $my_doc[$key], $v_key);
@@ -58,7 +58,7 @@ class ModelUtils
                     return $my_doc[$key];
                 }
             } // Is the value of the array[key] have same variable type
-              //that stated in the definition of the model array.
+                //that stated in the definition of the model array.
             elseif ($my_doc_key_type != $my_model[$key]['_type']) {
                 throw new \Exception("Error for key '".$v_key."'".", ".$my_doc_key_type.
                     " given but it must be ".$my_model[$key]['_type']);
@@ -286,8 +286,8 @@ class ModelUtils
         return $new_doc;
     }
 
-    private static function setDefaultModelAttributes($my_model){
-        
+    private static function setDefaultModelAttributes($my_model)
+    {
         return array_merge(static::$field_attributes, $my_model);
     }
     
@@ -354,7 +354,7 @@ class ModelUtils
             'array' => 'array',
             'object' => 'object',
             'resource' => 'resource',
-			'null' => 'null'
+            'null' => 'null'
         ][strtolower(gettype($value))];
     }
 }
