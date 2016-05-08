@@ -44,7 +44,7 @@ EOT;
     {
         $doc   =json_decode($dct, true);
         $model = json_decode(trim($this->testData), true);
-        $doc   = ModelUtils::fit_doc_to_model($model, $doc);
+        $doc   = ModelUtils::fitDocToModel($model, $doc);
 
         $this->assertInternalType('array', $doc);
         $this->assertArrayHasKey('name', $doc);
@@ -59,8 +59,8 @@ EOT;
         $this->assertInternalType('array', $doc['profile']['pets']);
         $this->assertArrayHasKey('cat', $doc['profile']['pets']);
 
-        $doc = ModelUtils::setting_model_defaults($model, $doc);
-        $doc = ModelUtils::validate_doc($model, $doc);
+        $doc = ModelUtils::settingModelDefaults($model, $doc);
+        $doc = ModelUtils::validateDoc($model, $doc);
 
         $this->assertArrayHasKey('dogs', $doc['profile']['pets']);
     }
@@ -74,9 +74,9 @@ EOT;
     {
         $doc   = json_decode($dct, true);
         $model = json_decode(trim($this->testData), true);
-        $doc   = ModelUtils::fit_doc_to_model($model, $doc);
-        $doc   = ModelUtils::setting_model_defaults($model, $doc);
-        $doc   = ModelUtils::validate_doc($model, $doc);
+        $doc   = ModelUtils::fitDocToModel($model, $doc);
+        $doc   = ModelUtils::settingModelDefaults($model, $doc);
+        $doc   = ModelUtils::validateDoc($model, $doc);
     }
 
     public function successDataProvider()
