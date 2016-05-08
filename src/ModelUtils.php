@@ -323,6 +323,18 @@ class ModelUtils
             }
         }
         settype($value, $type);
+        
+        $value = self::setMaxMin($type, $value, $min_length, $max_length);
+
+        if ($in_options !== null) {
+            if (!in_array($value, $in_options)) {
+                $value = $in_options[0]; // First value of the in_options array is assumed to be the default value .
+            }
+        }
+
+        return $value;
+    }
+    private static function setMaxMin($type, $value, $min_length, $max_length){
         switch ($type) {
             case 'integer':
             case 'float':
@@ -345,15 +357,7 @@ class ModelUtils
                 }
                 break;
         }
-        if ($in_options !== null) {
-            if (!in_array($value, $in_options)) {
-                $value = $in_options[0]; // First value of the in_options array is assumed to be the default value .
-            }
-        }
-
-        return $value;
     }
-
     /**
      * A Note:
      * Since the built-in php function gettype returns "double" variabe type, here is the workaround function
