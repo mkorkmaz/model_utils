@@ -324,7 +324,7 @@ class ModelUtils
     {
         $type        = isset($my_model['_type'])         ? $my_model['_type']         : 'string';
         $input_type  = isset($my_model['_input_type'])   ? $my_model['_input_type']   : null;
-        $format      = isset($my_model['_input_format']) ? $my_model['_input_format'] : "";
+        //$format      = isset($my_model['_input_format']) ? $my_model['_input_format'] : "";
         $min_length  = isset($my_model['_min_length'])   ? $my_model['_min_length']   : null;
         $max_length  = isset($my_model['_max_length'])   ? $my_model['_max_length']   : null;
         $in_options  = isset($my_model['_in_options'])   ? $my_model['_in_options']   : null;
@@ -335,10 +335,6 @@ class ModelUtils
                     if ($value=='now') {
                         $value = time();
                     }
-                    break;
-                case 'html':
-                    $value = $value;
-                    break;
                     break;
                 default:
                     $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
