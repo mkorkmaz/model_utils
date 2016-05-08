@@ -193,7 +193,7 @@ class ModelUtils
             return false;
         }
         if ($input_type !== null) {
-            self::filterValidate($input_type, $value);
+            self::filterValidate($input_type, $key, $value, $format);
         }
         switch ($type) {
             case 'integer':
@@ -236,7 +236,9 @@ class ModelUtils
         return $value;
     }
     
-    private static function filterValidate($input_type, $value){
+    private static function filterValidate($input_type, $key, $value, $format)
+    {
+        $filter_check = null;
         switch ($input_type) {
             case 'mail':
                 $filter_check = filter_var($value, FILTER_VALIDATE_EMAIL);
@@ -313,6 +315,8 @@ class ModelUtils
                 }
                 break;
         }
+        
+        return $filter_check;
     }
 
     /**
