@@ -380,24 +380,16 @@ class ModelUtils
      */
     public static function getType($value)
     {
-        if (is_bool($value)) {
-            return "boolean";
-        } elseif (is_string($value)) {
-            return "string";
-        } elseif (is_int($value)) {
-            return "integer";
-        } elseif (is_float($value)) {
-            return "float";
-        } elseif (is_array($value)) {
-            return "array";
-        } elseif (is_null($value)) {
-            return "null";
-        } elseif (is_object($value)) {
-            return "object";
-        } elseif (is_resource($value)) {
-            return "resource";
-        } else {
-            return "NA";
-        }
+        return [
+            'boolean' => 'boolean',
+            'string' => 'string',
+            'integer' => 'integer',
+            'long' => 'integer',
+            'double' => 'float',
+            'float' => 'float',
+            'object' => 'object',
+            'resource' => 'resource',
+			'null' => 'null'
+        ][strtolower(gettype($value))];
     }
 }
