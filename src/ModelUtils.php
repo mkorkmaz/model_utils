@@ -113,7 +113,7 @@ class ModelUtils
                 break;
         }
         if ($in_options !== null && (!in_array($value, $in_options))) {
-            $error = "It's length must be one of the these values: ".implode(", ", $in_options);
+            $error = "It's value must be one of the these values: ".implode(", ", $in_options);
         }
         if ($error != '') {
             throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
