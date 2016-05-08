@@ -90,7 +90,7 @@ class ModelUtils
                 if (ModelUtils::gettype($my_doc[$key]) != "array") {
                     return $my_doc[$key];
                 }
-            } elseif (ModelUtils::gettype($my_doc[$key]) == "array" && $my_model[$key]['_type'] !="array") {
+            } elseif (ModelUtils::gettype($my_doc[$key]) == "array" && $my_model[$key]['_type'] != "array") {
                 $my_doc[$key]=$my_model[$key]['_default'];
             }
             // If array[key] is not an array and not has same variable type that stated in the model definition . 
@@ -117,36 +117,36 @@ class ModelUtils
             // If one of the keys of $my_model[$key] is _type this is a definition, not a defined key
             if (in_array("_type", $item_keys)) {
                 // If array does not have this key, set the default value . 
-                if (! isset($my_doc[$key])) {
+                if (!isset($my_doc[$key])) {
                     if (isset($my_model[$key]['_input_type'])) {
                         switch ($my_model[$key]['_input_type']) {
                             case 'uid':
                                     $shortid = ShortId::create();
-                                    $new_doc[$key]=$shortid->generate();
+                                    $new_doc[$key] = $shortid->generate();
                                 break;
                             case 'date':
-                                if ($my_model[$key]['_default']=='today') {
+                                if ($my_model[$key]['_default'] == 'today') {
                                     $new_doc[$key] = date("Y-m-d");
                                 } else {
-                                    $new_doc[$key]=$my_model[$key]['_default'];
+                                    $new_doc[$key] = $my_model[$key]['_default'];
                                 }
                                 break;
                             case 'timestamp':
-                                if (($my_model[$key]['_default']=="now") && ($my_model[$key]['_type'] == "integer")) {
+                                if (($my_model[$key]['_default'] == "now") && ($my_model[$key]['_type'] == "integer")) {
                                     $new_doc[$key] = time();
-                                } else if ($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")) {
+                                } else if ($my_model[$key]['_default'] == "now" && ($my_model[$key]['_type'] == "string")) {
                                     
                                     $new_doc[$key] = date("Y-m-d H:i:s");
                                 } else {
-                                    $new_doc[$key]=$my_model[$key]['_default'];
+                                    $new_doc[$key] = $my_model[$key]['_default'];
                                 }
                                 break;
                     
                             default:
-                                $new_doc[$key]=$my_model[$key]['_default'];
+                                $new_doc[$key] = $my_model[$key]['_default'];
                         }
                     } else {
-                        $new_doc[$key]=$my_model[$key]['_default'];
+                        $new_doc[$key] = $my_model[$key]['_default'];
                     }
                 }                
                 // If array has this key
@@ -154,7 +154,7 @@ class ModelUtils
                     // If model definition stated this key's default value is not Null and has a wrong variable type, fix it . 
                     if ($my_model[$key]['_default'] !== null) {
                         if (ModelUtils::gettype($my_doc[$key]) != $my_model[$key]['_type'] && ModelUtils::gettype($my_doc[$key]) == "array") {
-                            $my_doc[$key]=$my_model[$key]['_default'];
+                            $my_doc[$key] = $my_model[$key]['_default'];
                         }
                         settype($my_doc[$key], $my_model[$key]['_type']);
                     }
@@ -164,7 +164,7 @@ class ModelUtils
             }            
             // If one of the keys is not _type, this is a defined key, recursively get sub keys . 
             else {
-                if (! isset($my_doc[$key])) {
+                if (!isset($my_doc[$key])) {
                     $my_doc[$key] = "";
                 }
                 $new_doc[$key] = ModelUtils::setting_model_defaults($my_model[$key], $my_doc[$key]);
@@ -183,12 +183,12 @@ class ModelUtils
      */
     public static function validate_doc_item($value, $my_model, $key)
     {
-        $type        = isset($my_model['_type'])         ? $my_model['_type']         : 'string';
-        $input_type  = isset($my_model['_input_type'])   ? $my_model['_input_type']   : 'string';
+        $type        = isset($my_model['_type']) ? $my_model['_type'] : 'string';
+        $input_type  = isset($my_model['_input_type']) ? $my_model['_input_type'] : 'string';
         $format      = isset($my_model['_input_format']) ? $my_model['_input_format'] : "";
-        $min_length  = isset($my_model['_min_length'])   ? $my_model['_min_length']   : null;
-        $max_length  = isset($my_model['_max_length'])   ? $my_model['_max_length']   : null;
-        $in_options  = isset($my_model['_in_options'])   ? $my_model['_in_options']   : null;
+        $min_length  = isset($my_model['_min_length']) ? $my_model['_min_length'] : null;
+        $max_length  = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
+        $in_options  = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
 
         if (ModelUtils::gettype($value) != $type) {
             return false;
@@ -231,7 +231,7 @@ class ModelUtils
                     }
                     break;
                 case 'date':
-                    $regex        = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
+                    $regex = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
                         throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
@@ -239,7 +239,7 @@ class ModelUtils
                     }
                     break;
                 case 'time':
-                    $regex        = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
+                    $regex = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
                         throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
@@ -247,14 +247,14 @@ class ModelUtils
                     }
                     break;
                 case 'datetime':
-                    $regex        = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
+                    $regex = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
                         throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the validation: INVALID_FORMAT ");
                     }
                     break;
                 case 'regex':
-                    $regex        = "/^" . $format . "$/";
+                    $regex = "/^".$format."$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
                         throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
@@ -273,7 +273,7 @@ class ModelUtils
                     }
                 }
                 if ($max_length !== null) {
-                    if ($value > $max_length) {
+                    if ($value>$max_length) {
                         throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: Must be smallerr than " . $max_length . "  ");
                     }
@@ -281,13 +281,13 @@ class ModelUtils
                 break;
             default:
                 if ($max_length !== null) {
-                    if (strlen($value) > $max_length) {
+                    if (strlen($value)>$max_length) {
                         throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: It's length must be smaller than " . $max_length . "  ");
                     }
                 }
                 if ($min_length !== null) {
-                    if (strlen($value) < $min_length) {
+                    if (strlen($value)<$min_length) {
                         throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: It's length must be longer than " . $min_length . "  ");
                     }
@@ -312,11 +312,11 @@ class ModelUtils
      */
     public static function sanitize_doc_item($value, $my_model)
     {
-        $type        = isset($my_model['_type'])         ? $my_model['_type']         : 'string';
-        $input_type  = isset($my_model['_input_type'])   ? $my_model['_input_type']   : null;
-        $min_length  = isset($my_model['_min_length'])   ? $my_model['_min_length']   : null;
-        $max_length  = isset($my_model['_max_length'])   ? $my_model['_max_length']   : null;
-        $in_options  = isset($my_model['_in_options'])   ? $my_model['_in_options']   : null;
+        $type = isset($my_model['_type']) ? $my_model['_type'] : 'string';
+        $input_type = isset($my_model['_input_type']) ? $my_model['_input_type'] : null;
+        $min_length = isset($my_model['_min_length']) ? $my_model['_min_length'] : null;
+        $max_length = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
+        $in_options = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
 
         if ($input_type !== null) {
             switch ($input_type) {
@@ -335,19 +335,19 @@ class ModelUtils
             case 'integer':
             case 'float':
                 if ($min_length !== null) {
-                    if ($value < $min_length) {
+                    if ($value<$min_length) {
                         $value = $min_length;
                     }
                 }
                 if ($max_length !== null) {
-                    if ($value > $max_length) {
+                    if ($value>$max_length) {
                         $value = $max_length;
                     }
                 }
                 break;
             default:
                 if ($max_length !== null) {
-                    if (strlen($value) > $max_length) {
+                    if (strlen($value)>$max_length) {
                         $value = substr($value, 0, $max_length);
                     }
                 }
