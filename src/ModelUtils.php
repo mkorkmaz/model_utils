@@ -92,33 +92,32 @@ class ModelUtils
     
     private static function checkMinMaxInOptions($type, $key, $value, $min_length, $max_length, $in_options)
     {
+        $error = '';
         switch ($type) {
             case 'integer':
             case 'float':
                 if ($min_length !== null && ($value<$min_length)) {
-                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                        "validation: Must be bigger than ".$min_length."  ");
-                     
+                    $error = "validation: Must be bigger than ".$min_length;
                 }
                 if ($max_length !== null && ($value>$max_length)) {
-                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                        "validation: Must be smallerr than ".$max_length."  ");
+                    $error = "validation: Must be smallerr than ".$max_length;
                 }
                 break;
             default:
                 if ($max_length !== null && (strlen($value)>$max_length)) {
-                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                        "validation: It's length must be smaller than ".$max_length."  ");
+                    $error = "validation: It's length must be smaller than ".$max_length;
                 }
                 if ($min_length !== null && (strlen($value)<$min_length)) {
-                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                        "validation: It's length must be longer than ".$min_length."  ");
+                    $error = "validation: It's length must be longer than ".$min_length;
                 }
                 break;
         }
         if ($in_options !== null && (!in_array($value, $in_options))) {
-            throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the validation: ".
-                "It's length must be one of the these values: ".implode(", ", $in_options)."  ");
+            $error = "It's length must be one of the these values: ".implode(", ", $in_options);
+        }
+        if ($error != '') {
+            throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                "validation: ".$error);
         }
     }
     
