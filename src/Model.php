@@ -37,11 +37,10 @@ class Model extends ModelUtils
         return parent::fitDocToModel($this->schema, $doc);
     }
 
-    public function install($db)
+    public function install($db_conn)
     {
-
-        $db->drop($this->collection_name, $this->schema);
-        $db->create($this->collection_name, $this->schema);
+        $db_conn->drop($this->collection_name, $this->schema);
+        $db_conn->create($this->collection_name, $this->schema);
         $indexes = [];
         foreach ($this->schema as $field => $fconfig) {
             if ($fconfig['_index'] === true) {
@@ -62,12 +61,12 @@ class Model extends ModelUtils
                 foreach ($data as $item) {
                     $item = parent::setModelDefaults($this->schema, $item);
                     $doc = parent::validateDoc($this->schema, $item);
-                    $db->insert($this->collection_name, $doc);
+                    $db_conn->insert($this->collection_name, $doc);
                 }
             }
         }
         if (count($indexes)>0) {
-            $db->createIndexes($this->collection_name, $indexes);
+            $db_conn->createIndexes($this->collection_name, $indexes);
         }
     }
 }
