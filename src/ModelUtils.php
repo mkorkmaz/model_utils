@@ -387,6 +387,7 @@ class ModelUtils
             'long' => 'integer',
             'double' => 'float',
             'float' => 'float',
+            'array' => 'array',
             'object' => 'object',
             'resource' => 'resource',
 			'null' => 'null'
