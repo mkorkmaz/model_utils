@@ -2,26 +2,14 @@
 
 namespace ModelUtils;
 
-class Model
+class Model extends ModelUtils
 {
     public $config_yaml = "";
     public $schema = [];
     public $type = "basic"; // Possible options are basic, cache, search
     public $collection_name = "";
     public $data_file = null;
-    public $field_attributes = [
-        '_type' => null,
-        '_input_type' => null,
-        '_min_length' => null,
-        '_max_length' => null,
-        '_in_options' => null,
-        '_input_format' => null,
-        '_required' => null,
-        '_index' => null,
-        '_ref' => null,
-        '_has_many' => null,
-        '_index_type' => null
-    ];
+
 
     public function __construct()
     {
@@ -35,18 +23,18 @@ class Model
 
     public function validate($doc)
     {
-        return ModelUtils::validateDoc($this->schema, $doc);
+        return parent::validateDoc($this->schema, $doc);
     }
 
     public function setDefaults($doc)
     {
-        return ModelUtils::setModelDefaults($this->schema, $doc);
+        return parent::setModelDefaults($this->schema, $doc);
     }
 
 
     public function fitDoc($doc)
     {
-        return ModelUtils::fitDocToModel($this->schema, $doc);
+        return parent::fitDocToModel($this->schema, $doc);
     }
 
     public function install($db)
@@ -72,8 +60,8 @@ class Model
             if (file_exists(BASE_DIR.$this->data_file)) {
                 $data = json_decode(file_get_contents(BASE_DIR.$this->data_file), true);
                 foreach ($data as $item) {
-                    $item = ModelUtils::setModelDefaults($this->schema, $item);
-                    $doc = ModelUtils::validateDoc($this->schema, $item);
+                    $item = parent::setModelDefaults($this->schema, $item);
+                    $doc = parent::validateDoc($this->schema, $item);
                     $db->insert($this->collection_name, $doc);
                 }
             }

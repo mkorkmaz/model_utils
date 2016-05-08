@@ -21,7 +21,11 @@ class ModelUtils
         '_max_length' => null,
         '_in_options' => null,
         '_input_format' => null,
-        '_required' => null
+        '_required' => null,
+        '_index' => null,
+        '_ref' => null,
+        '_has_many' => null,
+        '_index_type' => null
     ];
     
     /**
