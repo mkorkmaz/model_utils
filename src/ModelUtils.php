@@ -284,7 +284,7 @@ class ModelUtils
                 break;
             case 'regex':
                 $regex = "/^".$format."$/";
-                
+                $options = array("options"=>array("regexp"=> $regex));
                 $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
                 $validation = 'INVALID_FORMAT';
                 break;
