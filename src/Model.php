@@ -10,6 +10,19 @@ class Model
     public $type = "basic"; // Possible options are basic, cache, search
     public $collection_name = "";
     public $data_file = null;
+    public $field_attributes = [
+        'type' => null,
+        '_input_type' => null,
+        '_min_length' => null,
+        '_max_length' => null,
+        '_in_options' => null,
+        '_input_format' => null,
+        '_required' => null,
+        '_index' => null,
+        '_ref' => null,
+        '_has_many' => null,
+        '_index_type' => null
+    ];
 
     public function __construct()
     {

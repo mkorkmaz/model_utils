@@ -74,20 +74,15 @@ class ModelUtils
      */
     private static function validateDocItem($value, $my_model, $key)
     {
-        $type        = isset($my_model['_type']) ? $my_model['_type'] : 'string';
-        $input_type  = isset($my_model['_input_type']) ? $my_model['_input_type'] : 'string';
-        $format      = isset($my_model['_input_format']) ? $my_model['_input_format'] : "";
-        $min_length  = isset($my_model['_min_length']) ? $my_model['_min_length'] : null;
-        $max_length  = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
-        $in_options  = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
+
     
-        if (self::getType($value) != $type) {
+        if (self::getType($value) != $my_model['_type']) {
             return false;
         }
-        if ($input_type !== null) {
-            self::filterValidate($input_type, $key, $value, $format);
+        if ($my_model['_input_type'] !== null) {
+            self::filterValidate($my_model['_input_type'], $key, $value, $my_model['_input_format']);
         }
-        self::checkMinMaxInOptions($type, $key, $value, $min_length, $max_length, $in_options);
+        self::checkMinMaxInOptions($my_model['_type'], $key, $value, $my_model['_min_length'], $my_model['_max_length'], $my_model['_in_options']);
         return $value;
     }
     
@@ -295,17 +290,12 @@ class ModelUtils
      */
     private static function sanitizeDocItem($value, $my_model)
     {
-        $type = isset($my_model['_type']) ? $my_model['_type'] : 'string';
-        $input_type = isset($my_model['_input_type']) ? $my_model['_input_type'] : null;
-        $min_length = isset($my_model['_min_length']) ? $my_model['_min_length'] : null;
-        $max_length = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
-        $in_options = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
         $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        if (($input_type == 'timestamp') && ($value == 'now')) {
+        if (($my_model['_input_type'] == 'timestamp') && ($value == 'now')) {
             $value = time();
         }
-        settype($value, $type);
-        $value = self::setMaxMinInOptions($type, $value, $min_length, $max_length, $in_options);
+        settype($value, $my_model['_type']);
+        $value = self::setMaxMinInOptions($my_model['_type'], $value, $my_model['_min_length'], $my_model['_max_length'], $my_model['_in_options']);
         return $value;
     }
     
