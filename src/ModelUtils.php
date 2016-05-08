@@ -357,6 +357,7 @@ class ModelUtils
                 }
                 break;
         }
+        return $value;
     }
     /**
      * A Note:
