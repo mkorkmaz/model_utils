@@ -33,12 +33,12 @@ class ModelUtils
                 } else {
                     $my_key = $key;
                 }
-                throw new \Exception("Error for key '" . $my_key . "' that does not exist in the model");
+                throw new \Exception("Error for key '".$my_key."' that does not exist in the model");
             }
             // Is the value of the array[key] again another array? . 
             elseif (ModelUtils::gettype($my_doc[$key]) == "array") {
                 if ($my_key !== null) {
-                    $my_key = strval($my_key) . " . " . strval($key);
+                    $my_key = strval($my_key)." . ".strval($key);
                 } else {
                     $my_key = $key;
                 }
@@ -51,16 +51,16 @@ class ModelUtils
             // Does the value of the array[key] have same variable type that stated in the definition of the model array . 
             elseif (ModelUtils::gettype($my_doc[$key]) != $my_model[$key]['_type']) {
                 if ($my_key !== null) {
-                    $my_key = $my_key . " . " . $key;
+                    $my_key = $my_key." . ".$key;
                 } else {
                     $my_key = $key;
                 }
-                throw new \Exception("Error for key '" . $my_key . "'" . ", " . ModelUtils::gettype($my_doc[$key]) . 
+                throw new \Exception("Error for key '".$my_key."'" . ", ".ModelUtils::gettype($my_doc[$key]) . 
                     " given but it must be " . $my_model[$key]['_type']);
             } else {
                 $v_key = $key;
                 if ($my_key !== null) {
-                    $v_key = $my_key . " . " . $key;
+                    $v_key = $my_key." . ".$key;
                 }
                 $my_doc[$key] = ModelUtils::validate_doc_item($my_doc[$key], $my_model[$key], $v_key);
             }
@@ -80,7 +80,7 @@ class ModelUtils
         $my_keys = array_keys($my_doc);
         foreach ($my_keys as $key) {
             // If array has a key that is not presented in the model definition, unset it . 
-            if (! isset($my_model[$key])) {
+            if (!isset($my_model[$key])) {
                 unset($my_doc[$key]);
             }
             // If array[$key] is again an array, recursively fit this array too . 
@@ -91,7 +91,7 @@ class ModelUtils
                     return $my_doc[$key];
                 }
             } elseif (ModelUtils::gettype($my_doc[$key]) == "array" && $my_model[$key]['_type'] != "array") {
-                $my_doc[$key]=$my_model[$key]['_default'];
+                $my_doc[$key] = $my_model[$key]['_default'];
             }
             // If array[key] is not an array and not has same variable type that stated in the model definition . 
             else {
@@ -111,7 +111,7 @@ class ModelUtils
     public static function setting_model_defaults($my_model, $my_doc)
     {
         $my_keys = array_keys($my_model);
-        $new_doc =[ ];
+        $new_doc = [];
         foreach ($my_keys as $key) {
             $item_keys = array_keys($my_model[$key]);
             // If one of the keys of $my_model[$key] is _type this is a definition, not a defined key
@@ -198,35 +198,35 @@ class ModelUtils
                 case 'mail':
                     $filter_check = filter_var($value, FILTER_VALIDATE_EMAIL);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: INVALID_EMAIL_ADDRESS ");
                     }
                     break;
                 case 'bool':
                     $filter_check = filter_var($value, FILTER_VALIDATE_BOOLEAN);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: INVALID_BOOLEAN_VALUE ");
                     }
                     break;
                 case 'url':
                     $filter_check = filter_var($value, FILTER_VALIDATE_URL);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: INVALID_URL ");
                     }
                     break;
                 case 'ip':
                     $filter_check = filter_var($value, FILTER_VALIDATE_IP);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: INVALID_IP_ADDRESS ");
                     }
                     break;
                 case 'mac_address':
                     $filter_check = filter_var($value, FILTER_VALIDATE_MAC);
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: INVALID_MAC_ADDRESS ");
                     }
                     break;
@@ -234,7 +234,7 @@ class ModelUtils
                     $regex = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: INVALID_FORMAT ");
                     }
                     break;
@@ -242,7 +242,7 @@ class ModelUtils
                     $regex = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: INVALID_FORMAT ");
                     }
                     break;
@@ -250,14 +250,14 @@ class ModelUtils
                     $regex = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) ([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the validation: INVALID_FORMAT ");
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the validation: INVALID_FORMAT");
                     }
                     break;
                 case 'regex':
                     $regex = "/^".$format."$/";
                     $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=> $regex)));
                     if ($filter_check === false) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: INVALID_FORMAT ");
                     }
                     break;
@@ -268,13 +268,13 @@ class ModelUtils
             case 'float':
                 if ($min_length !== null) {
                     if ($value < $min_length) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: Must be bigger than " . $min_length . "  ");
                     }
                 }
                 if ($max_length !== null) {
                     if ($value>$max_length) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
                             "validation: Must be smallerr than " . $max_length . "  ");
                     }
                 }
@@ -282,22 +282,22 @@ class ModelUtils
             default:
                 if ($max_length !== null) {
                     if (strlen($value)>$max_length) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the " . 
                             "validation: It's length must be smaller than " . $max_length . "  ");
                     }
                 }
                 if ($min_length !== null) {
                     if (strlen($value)<$min_length) {
-                        throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
-                            "validation: It's length must be longer than " . $min_length . "  ");
+                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                            "validation: It's length must be longer than ".$min_length."  ");
                     }
                 }
                 break;
         }
         if ($in_options !== null) {
             if (!in_array($value, $in_options)) {
-                throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the validation: " . 
-                    "It's length must be one of the these values: " . implode(", ", $in_options) . "  ");
+                throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the validation: ".
+                    "It's length must be one of the these values: ".implode(", ", $in_options)."  ");
             }
         }
 
