@@ -304,21 +304,11 @@ class ModelUtils
         $min_length = isset($my_model['_min_length']) ? $my_model['_min_length'] : null;
         $max_length = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
         $in_options = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
-
-        if ($input_type !== null) {
-            switch ($input_type) {
-                case 'timestamp':
-                    if ($value == 'now') {
-                        $value = time();
-                    }
-                    break;
-                default:
-                    $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                    break;
-            }
+        $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        if(($input_type == 'timestamp') && ($value == 'now')){
+                $value = time();
         }
         settype($value, $type);
-        
         $value = self::setMaxMinInOptions($type, $value, $min_length, $max_length, $in_options);
         return $value;
     }
@@ -336,7 +326,7 @@ class ModelUtils
                 }
                 break;
             case 'string':
-                if ($max_length !== null && strlen($value)>$max_length ) {
+                if ($max_length !== null && strlen($value)>$max_length) {
                     $value = substr($value, 0, $max_length);
                 }
                 break;
