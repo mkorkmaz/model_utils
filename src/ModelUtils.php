@@ -338,26 +338,23 @@ class ModelUtils
         switch ($type) {
             case 'integer':
             case 'float':
-                if ($min_length !== null) {
-                    if ($value<$min_length) {
-                        $value = $min_length;
-                    }
+                if ($min_length !== null && ($value<$min_length)) {
+                    $value = $min_length;
                 }
-                if ($max_length !== null) {
-                    if ($value>$max_length) {
-                        $value = $max_length;
-                    }
+                if ($max_length !== null && ($value>$max_length)) {
+                    $value = $max_length;
                 }
+                return $value;
+                break;
+            case 'string':
+                if ($max_length !== null && strlen($value)>$max_length ) {
+                    $value = substr($value, 0, $max_length);
+                }
+                return $value;
                 break;
             default:
-                if ($max_length !== null) {
-                    if (strlen($value)>$max_length) {
-                        $value = substr($value, 0, $max_length);
-                    }
-                }
-                break;
+                return $value;
         }
-        return $value;
     }
     /**
      * A Note:
