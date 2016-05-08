@@ -7,7 +7,7 @@ class Model
 
     public $config_yaml = "";
     public $schema = [];
-    public $type = "basic"; // Possible options ["basic","cache","search"]
+    public $type = "basic"; // Possible options are basic, cache, search
     public $collection_name = "";
     public $data_file = null;
 
@@ -37,18 +37,18 @@ class Model
 
         $db->drop($this->collection_name, $this->schema);
         $db->create($this->collection_name, $this->schema);
-        $indexes =[];
+        $indexes = [];
         foreach ($this->schema as $field=>$fconfig) {
             if ($fconfig['_index'] === true) {
                 $index = ['key'=>[$field=>1]];
                 if (isset($fconfig["_index_type"])) {
                     switch ($fconfig["_index_type"]) {
                         case 'unique':
-                            $index['unique']=true;
+                            $index['unique'] = true;
                             break;
                     }
                 }
-                $indexes[]=$index;
+                $indexes[] = $index;
             }
         }
         if ($this->data_file !== null) {
@@ -61,7 +61,7 @@ class Model
                 }
             }
         }
-        if (count($indexes) > 0) {
+        if (count($indexes)>0) {
             $db->createIndexes($this->collection_name, $indexes);
         }
     }

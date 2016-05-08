@@ -90,8 +90,7 @@ class ModelUtils
                 if (ModelUtils::gettype($my_doc[$key]) != "array") {
                     return $my_doc[$key];
                 }
-            }
-            elseif (ModelUtils::gettype($my_doc[$key]) == "array" && $my_model[$key]['_type'] !="array") {
+            } elseif (ModelUtils::gettype($my_doc[$key]) == "array" && $my_model[$key]['_type'] !="array") {
                 $my_doc[$key]=$my_model[$key]['_default'];
             }
             // If array[key] is not an array and not has same variable type that stated in the model definition . 
@@ -128,20 +127,17 @@ class ModelUtils
                             case 'date':
                                 if ($my_model[$key]['_default']=='today') {
                                     $new_doc[$key] = date("Y-m-d");
-                                }
-                                else {
+                                } else {
                                     $new_doc[$key]=$my_model[$key]['_default'];
                                 }
                                 break;
                             case 'timestamp':
                                 if (($my_model[$key]['_default']=="now") && ($my_model[$key]['_type'] == "integer")) {
                                     $new_doc[$key] = time();
-                                }
-                                else if ($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")) {
+                                } else if ($my_model[$key]['_default']=="now" && ($my_model[$key]['_type']=="string")) {
                                     
                                     $new_doc[$key] = date("Y-m-d H:i:s");
-                                }
-                                else {
+                                } else {
                                     $new_doc[$key]=$my_model[$key]['_default'];
                                 }
                                 break;
@@ -149,8 +145,7 @@ class ModelUtils
                             default:
                                 $new_doc[$key]=$my_model[$key]['_default'];
                         }
-                    }
-                    else {
+                    } else {
                         $new_doc[$key]=$my_model[$key]['_default'];
                     }
                 }                
