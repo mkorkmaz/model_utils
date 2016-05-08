@@ -193,82 +193,7 @@ class ModelUtils
             return false;
         }
         if ($input_type !== null) {
-            switch ($input_type) {
-                case 'mail':
-                    $filter_check = filter_var($value, FILTER_VALIDATE_EMAIL);
-                    if ($filter_check === false) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: INVALID_EMAIL_ADDRESS ");
-                    }
-                    break;
-                case 'bool':
-                    $filter_check = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-                    if ($filter_check === false) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: INVALID_BOOLEAN_VALUE ");
-                    }
-                    break;
-                case 'url':
-                    $filter_check = filter_var($value, FILTER_VALIDATE_URL);
-                    if ($filter_check === false) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: INVALID_URL ");
-                    }
-                    break;
-                case 'ip':
-                    $filter_check = filter_var($value, FILTER_VALIDATE_IP);
-                    if ($filter_check === false) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: INVALID_IP_ADDRESS ");
-                    }
-                    break;
-                case 'mac_address':
-                    $filter_check = filter_var($value, FILTER_VALIDATE_MAC);
-                    if ($filter_check === false) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: INVALID_MAC_ADDRESS ");
-                    }
-                    break;
-                case 'date':
-                    $regex = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
-                    $options = array("options"=>array("regexp"=> $regex));
-                    $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
-                    if ($filter_check === false) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: INVALID_FORMAT ");
-                    }
-                    break;
-                case 'time':
-                    $regex = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
-                    $options = array("options"=>array("regexp"=> $regex));
-                    $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
-                    if ($filter_check === false) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: INVALID_FORMAT ");
-                    }
-                    break;
-                case 'datetime':
-                    $date_part = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])";
-                    $time_part = "([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])";
-                    $regex = "/^".$date_part." ".$time_part."$/";
-                    $options = array("options"=>array("regexp"=> $regex));
-                    $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
-                    if ($filter_check === false) {
-                        $exception_message="Error for value '".$value."' for '".$key."' 
-                                            couldn't pass the validation: INVALID_FORMAT";
-                        throw new \Exception($exception_message);
-                    }
-                    break;
-                case 'regex':
-                    $regex = "/^".$format."$/";
-                    $options = array("options"=>array("regexp"=> $regex));
-                    $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
-                    if ($filter_check === false) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: INVALID_FORMAT ");
-                    }
-                    break;
-            }
+            self::filterValidate($input_type, $value);
         }
         switch ($type) {
             case 'integer':
@@ -309,6 +234,85 @@ class ModelUtils
         }
 
         return $value;
+    }
+    
+    private static function filterValidate($input_type, $value){
+        switch ($input_type) {
+            case 'mail':
+                $filter_check = filter_var($value, FILTER_VALIDATE_EMAIL);
+                if ($filter_check === false) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: INVALID_EMAIL_ADDRESS ");
+                }
+                break;
+            case 'bool':
+                $filter_check = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                if ($filter_check === false) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: INVALID_BOOLEAN_VALUE ");
+                }
+                break;
+            case 'url':
+                $filter_check = filter_var($value, FILTER_VALIDATE_URL);
+                if ($filter_check === false) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: INVALID_URL ");
+                }
+                break;
+            case 'ip':
+                $filter_check = filter_var($value, FILTER_VALIDATE_IP);
+                if ($filter_check === false) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: INVALID_IP_ADDRESS ");
+                }
+                break;
+            case 'mac_address':
+                $filter_check = filter_var($value, FILTER_VALIDATE_MAC);
+                if ($filter_check === false) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: INVALID_MAC_ADDRESS ");
+                }
+                break;
+            case 'date':
+                $regex = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
+                $options = array("options"=>array("regexp"=> $regex));
+                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
+                if ($filter_check === false) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: INVALID_FORMAT ");
+                }
+                break;
+            case 'time':
+                $regex = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
+                $options = array("options"=>array("regexp"=> $regex));
+                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
+                if ($filter_check === false) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: INVALID_FORMAT ");
+                }
+                break;
+            case 'datetime':
+                $date_part = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])";
+                $time_part = "([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])";
+                $regex = "/^".$date_part." ".$time_part."$/";
+                $options = array("options"=>array("regexp"=> $regex));
+                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
+                if ($filter_check === false) {
+                    $exception_message="Error for value '".$value."' for '".$key."'
+                                            couldn't pass the validation: INVALID_FORMAT";
+                    throw new \Exception($exception_message);
+                }
+                break;
+            case 'regex':
+                $regex = "/^".$format."$/";
+                $options = array("options"=>array("regexp"=> $regex));
+                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
+                if ($filter_check === false) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: INVALID_FORMAT ");
+                }
+                break;
+        }
     }
 
     /**
