@@ -59,7 +59,7 @@ EOT;
         $this->assertInternalType('array', $doc['profile']['pets']);
         $this->assertArrayHasKey('cat', $doc['profile']['pets']);
 
-        $doc = ModelUtils::settingModelDefaults($model, $doc);
+        $doc = ModelUtils::setModelDefaults($model, $doc);
         $doc = ModelUtils::validateDoc($model, $doc);
 
         $this->assertArrayHasKey('dogs', $doc['profile']['pets']);
@@ -75,7 +75,7 @@ EOT;
         $doc   = json_decode($dct, true);
         $model = json_decode(trim($this->testData), true);
         $doc   = ModelUtils::fitDocToModel($model, $doc);
-        $doc   = ModelUtils::settingModelDefaults($model, $doc);
+        $doc   = ModelUtils::setModelDefaults($model, $doc);
         $doc   = ModelUtils::validateDoc($model, $doc);
     }
 

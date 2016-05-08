@@ -36,33 +36,33 @@ class ModelUtils
                 }
                 throw new \Exception("Error for key '".$my_key."' that does not exist in the model");
             } // Is the value of the array[key] again another array? .
-            elseif (ModelUtils::getType($my_doc[$key]) == "array") {
+            elseif (self::getType($my_doc[$key]) == "array") {
                 if ($my_key !== null) {
                     $my_key = strval($my_key)." . ".strval($key);
                 } else {
                     $my_key = $key;
                 }
                 // Validate this array too .
-                $my_doc[$key] = ModelUtils::validateDoc($my_model[$key], $my_doc[$key], $my_key);
-                if (ModelUtils::getType($my_doc[$key]) != "array") {
+                $my_doc[$key] = self::validateDoc($my_model[$key], $my_doc[$key], $my_key);
+                if (self::getType($my_doc[$key]) != "array") {
                     return $my_doc[$key];
                 }
             } // Is the value of the array[key] have same variable type
               //that stated in the definition of the model array.
-            elseif (ModelUtils::getType($my_doc[$key]) != $my_model[$key]['_type']) {
+            elseif (self::getType($my_doc[$key]) != $my_model[$key]['_type']) {
                 if ($my_key !== null) {
                     $my_key = $my_key." . ".$key;
                 } else {
                     $my_key = $key;
                 }
-                throw new \Exception("Error for key '".$my_key."'".", ".ModelUtils::getType($my_doc[$key]).
+                throw new \Exception("Error for key '".$my_key."'".", ".self::getType($my_doc[$key]).
                     " given but it must be ".$my_model[$key]['_type']);
             } else {
                 $v_key = $key;
                 if ($my_key !== null) {
                     $v_key = $my_key." . ".$key;
                 }
-                $my_doc[$key] = ModelUtils::validateDocItem($my_doc[$key], $my_model[$key], $v_key);
+                $my_doc[$key] = self::validateDocItem($my_doc[$key], $my_model[$key], $v_key);
             }
         }
         return $my_doc;
@@ -83,17 +83,17 @@ class ModelUtils
             if (!isset($my_model[$key])) {
                 unset($my_doc[$key]);
             } // If array[$key] is again an array, recursively fit this array too .
-            elseif (ModelUtils::getType($my_doc[$key]) == "array" && !isset($my_model[$key]['_type'])) {
-                $my_doc[$key] = ModelUtils::fitDocToModel($my_model[$key], $my_doc[$key]);
+            elseif (self::getType($my_doc[$key]) == "array" && !isset($my_model[$key]['_type'])) {
+                $my_doc[$key] = self::fitDocToModel($my_model[$key], $my_doc[$key]);
                 // If returned value is not an array, return it .
-                if (ModelUtils::getType($my_doc[$key]) != "array") {
+                if (self::getType($my_doc[$key]) != "array") {
                     return $my_doc[$key];
                 }
-            } elseif (ModelUtils::getType($my_doc[$key]) == "array" && $my_model[$key]['_type'] != "array") {
+            } elseif (self::getType($my_doc[$key]) == "array" && $my_model[$key]['_type'] != "array") {
                 $my_doc[$key] = $my_model[$key]['_default'];
             } // If array[key] is not an array and not has same variable type that stated in the model definition .
             else {
-                $my_doc[$key] = ModelUtils::sanitizeDocItem($my_doc[$key], $my_model[$key]);
+                $my_doc[$key] = self::sanitizeDocItem($my_doc[$key], $my_model[$key]);
             }
         }
 
@@ -106,7 +106,7 @@ class ModelUtils
      *
      * @return array
      */
-    public static function settingModelDefaults($my_model, $my_doc)
+    public static function setModelDefaults($my_model, $my_doc)
     {
         $my_keys = array_keys($my_model);
         $new_doc = [];
@@ -152,7 +152,7 @@ class ModelUtils
                     // If model definition stated this key's default value is not Null
                     // and has a wrong variable type, fix it.
                     if ($my_model[$key]['_default'] !== null) {
-                        $key_type = ModelUtils::getType($my_doc[$key]);
+                        $key_type = self::getType($my_doc[$key]);
                         if ($key_type != $my_model[$key]['_type'] && $key_type == "array") {
                             $my_doc[$key] = $my_model[$key]['_default'];
                         }
@@ -160,13 +160,13 @@ class ModelUtils
                     }
                     $new_doc[$key] = $my_doc[$key];
                 }
-                $new_doc[$key] = ModelUtils::sanitizeDocItem($new_doc[$key], $my_model[$key]);
+                $new_doc[$key] = self::sanitizeDocItem($new_doc[$key], $my_model[$key]);
             } // If one of the keys is not _type, this is a defined key, recursively get sub keys .
             else {
                 if (!isset($my_doc[$key])) {
                     $my_doc[$key] = "";
                 }
-                $new_doc[$key] = ModelUtils::settingModelDefaults($my_model[$key], $my_doc[$key]);
+                $new_doc[$key] = self::setModelDefaults($my_model[$key], $my_doc[$key]);
             }
         }
         return $new_doc;
@@ -189,7 +189,7 @@ class ModelUtils
         $max_length  = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
         $in_options  = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
 
-        if (ModelUtils::getType($value) != $type) {
+        if (self::getType($value) != $type) {
             return false;
         }
         if ($input_type !== null) {

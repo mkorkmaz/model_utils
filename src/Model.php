@@ -28,7 +28,7 @@ class Model
 
     public function setDefaults($doc)
     {
-        return ModelUtils::settingModelDefaults($this->schema, $doc);
+        return ModelUtils::setModelDefaults($this->schema, $doc);
     }
 
 
@@ -60,7 +60,7 @@ class Model
             if (file_exists(BASE_DIR.$this->data_file)) {
                 $data = json_decode(file_get_contents(BASE_DIR.$this->data_file), true);
                 foreach ($data as $item) {
-                    $item = ModelUtils::settingModelDefaults($this->schema, $item);
+                    $item = ModelUtils::setModelDefaults($this->schema, $item);
                     $doc = ModelUtils::validateDoc($this->schema, $item);
                     $db->insert($this->collection_name, $doc);
                 }
