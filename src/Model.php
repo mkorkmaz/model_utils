@@ -7,7 +7,7 @@ class Model
 
     public $config_yaml = "";
     public $schema = [];
-    public $type = "basic"; // ["basic","cache","search"]
+    public $type = "basic"; // Possible options ["basic","cache","search"]
     public $collection_name = "";
     public $data_file = null;
 
@@ -62,7 +62,7 @@ class Model
             }
         }
         if (count($indexes) > 0) {
-            $db->create_indexes($this->collection_name, $indexes);
+            $db->createIndexes($this->collection_name, $indexes);
         }
     }
 }

@@ -58,10 +58,9 @@ class ModelUtils
                 throw new \Exception("Error for key '" . $my_key . "'" . ", " . ModelUtils::gettype($my_doc[$key]) . 
                     " given but it must be " . $my_model[$key]['_type']);
             } else {
+                $v_key = $key;
                 if ($my_key !== null) {
                     $v_key = $my_key . " . " . $key;
-                } else {
-                    $v_key = $key;
                 }
                 $my_doc[$key] = ModelUtils::validate_doc_item($my_doc[$key], $my_model[$key], $v_key);
             }
@@ -199,7 +198,6 @@ class ModelUtils
         if (ModelUtils::gettype($value) != $type) {
             return false;
         }
-        $filter_check = true;
         if ($input_type !== null) {
             switch ($input_type) {
                 case 'mail':
@@ -222,9 +220,6 @@ class ModelUtils
                         throw new \Exception("Error for value '" . $value . "' for '" . $key . "' couldn't pass the " . 
                             "validation: INVALID_URL ");
                     }
-                    break;
-                case 'html':
-                    $filter_check = true;
                     break;
                 case 'ip':
                     $filter_check = filter_var($value, FILTER_VALIDATE_IP);
@@ -324,7 +319,6 @@ class ModelUtils
     {
         $type        = isset($my_model['_type'])         ? $my_model['_type']         : 'string';
         $input_type  = isset($my_model['_input_type'])   ? $my_model['_input_type']   : null;
-        //$format      = isset($my_model['_input_format']) ? $my_model['_input_format'] : "";
         $min_length  = isset($my_model['_min_length'])   ? $my_model['_min_length']   : null;
         $max_length  = isset($my_model['_max_length'])   ? $my_model['_max_length']   : null;
         $in_options  = isset($my_model['_in_options'])   ? $my_model['_in_options']   : null;
@@ -332,7 +326,7 @@ class ModelUtils
         if ($input_type !== null) {
             switch ($input_type) {
                 case 'timestamp':
-                    if ($value=='now') {
+                    if ($value == 'now') {
                         $value = time();
                     }
                     break;
