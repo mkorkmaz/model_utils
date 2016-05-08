@@ -23,18 +23,18 @@ class Model extends ModelUtils
 
     public function validate($doc)
     {
-        return parent::validateDoc($this->schema, $doc);
+        return $this->validateDoc($this->schema, $doc);
     }
 
     public function setDefaults($doc)
     {
-        return parent::setModelDefaults($this->schema, $doc);
+        return $this->setModelDefaults($this->schema, $doc);
     }
 
 
     public function fitDoc($doc)
     {
-        return parent::fitDocToModel($this->schema, $doc);
+        return $this->fitDocToModel($this->schema, $doc);
     }
 
     public function install($db_conn)
@@ -59,8 +59,8 @@ class Model extends ModelUtils
             if (file_exists(BASE_DIR.$this->data_file)) {
                 $data = json_decode(file_get_contents(BASE_DIR.$this->data_file), true);
                 foreach ($data as $item) {
-                    $item = parent::setModelDefaults($this->schema, $item);
-                    $doc = parent::validateDoc($this->schema, $item);
+                    $item = $this->setModelDefaults($this->schema, $item);
+                    $doc = $this->validateDoc($this->schema, $item);
                     $db_conn->insert($this->collection_name, $doc);
                 }
             }
