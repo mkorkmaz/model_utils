@@ -67,7 +67,128 @@ class ModelUtils
         }
         return $my_doc;
     }
-
+    
+    /**
+     * @param mixed     $value
+     * @param array     $my_model
+     * @param string    $key
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    private static function validateDocItem($value, $my_model, $key)
+    {
+        $type        = isset($my_model['_type']) ? $my_model['_type'] : 'string';
+        $input_type  = isset($my_model['_input_type']) ? $my_model['_input_type'] : 'string';
+        $format      = isset($my_model['_input_format']) ? $my_model['_input_format'] : "";
+        $min_length  = isset($my_model['_min_length']) ? $my_model['_min_length'] : null;
+        $max_length  = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
+        $in_options  = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
+    
+        if (self::getType($value) != $type) {
+            return false;
+        }
+        if ($input_type !== null) {
+            self::filterValidate($input_type, $key, $value, $format);
+        }
+        self::checkMinMax($type, $key, $value, $min_length, $max_length);
+        if ($in_options !== null) {
+            if (!in_array($value, $in_options)) {
+                throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the validation: ".
+                    "It's length must be one of the these values: ".implode(", ", $in_options)."  ");
+            }
+        }
+    
+        return $value;
+    }
+    
+    private static function checkMinMax($type, $key, $value, $min_length, $max_length){
+        switch ($type) {
+            case 'integer':
+            case 'float':
+                if ($min_length !== null && ($value<$min_length)) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: Must be bigger than ".$min_length."  ");
+                     
+                }
+                if ($max_length !== null && ($value>$max_length)) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: Must be smallerr than ".$max_length."  ");
+                }
+                break;
+            default:
+                if ($max_length !== null && (strlen($value)>$max_length)) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the " .
+                        "validation: It's length must be smaller than ".$max_length."  ");
+                }
+                if ($min_length !== null && (strlen($value)<$min_length)) {
+                    throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                        "validation: It's length must be longer than ".$min_length."  ");
+                }
+                break;
+        }
+    }
+    
+    private static function filterValidate($input_type, $key, $value, $format)
+    {
+        $filter_check = null;
+        $validation = null;
+        switch ($input_type) {
+            case 'mail':
+                $filter_check = filter_var($value, FILTER_VALIDATE_EMAIL);
+                $validation = 'INVALID_EMAIL_ADDRESS';
+    
+                break;
+            case 'bool':
+                $filter_check = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                $validation = 'INVALID_BOOLEAN_VALUE';
+                break;
+            case 'url':
+                $filter_check = filter_var($value, FILTER_VALIDATE_URL);
+                $validation = 'INVALID_URL';
+                break;
+            case 'ip':
+                $filter_check = filter_var($value, FILTER_VALIDATE_IP);
+                $validation = 'INVALID_IP_ADDRESS';
+                break;
+            case 'mac_address':
+                $filter_check = filter_var($value, FILTER_VALIDATE_MAC);
+                $validation = 'INVALID_MAC_ADDRESS';
+                break;
+            case 'date':
+                $regex = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
+                $options = array("options"=>array("regexp"=> $regex));
+                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
+                $validation = 'INVALID_DATE_FORMAT';
+                break;
+            case 'time':
+                $regex = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
+                $options = array("options"=>array("regexp"=> $regex));
+                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
+                $validation = 'INVALID_TIME_FORMAT';
+                break;
+            case 'datetime':
+                $date_part = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])";
+                $time_part = "([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])";
+                $regex = "/^".$date_part." ".$time_part."$/";
+                $options = array("options"=>array("regexp"=> $regex));
+                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
+                $validation = 'INVALID_DATETIME_FORMAT';
+                break;
+            case 'regex':
+                $regex = "/^".$format."$/";
+                $options = array("options"=>array("regexp"=> $regex));
+                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
+                $validation = 'INVALID_FORMAT';
+                break;
+        }
+        if ($filter_check === false) {
+            throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
+                "validation: ".$validation);
+        }
+        return $filter_check;
+    }
+    
     /**
      * Fit document to given Model
      *
@@ -175,134 +296,10 @@ class ModelUtils
     /**
      * @param mixed     $value
      * @param array     $my_model
-     * @param string    $key
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public static function validateDocItem($value, $my_model, $key)
-    {
-        $type        = isset($my_model['_type']) ? $my_model['_type'] : 'string';
-        $input_type  = isset($my_model['_input_type']) ? $my_model['_input_type'] : 'string';
-        $format      = isset($my_model['_input_format']) ? $my_model['_input_format'] : "";
-        $min_length  = isset($my_model['_min_length']) ? $my_model['_min_length'] : null;
-        $max_length  = isset($my_model['_max_length']) ? $my_model['_max_length'] : null;
-        $in_options  = isset($my_model['_in_options']) ? $my_model['_in_options'] : null;
-
-        if (self::getType($value) != $type) {
-            return false;
-        }
-        if ($input_type !== null) {
-            self::filterValidate($input_type, $key, $value, $format);
-        }
-        switch ($type) {
-            case 'integer':
-            case 'float':
-                if ($min_length !== null) {
-                    if ($value<$min_length) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: Must be bigger than ".$min_length."  ");
-                    }
-                }
-                if ($max_length !== null) {
-                    if ($value>$max_length) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: Must be smallerr than ".$max_length."  ");
-                    }
-                }
-                break;
-            default:
-                if ($max_length !== null) {
-                    if (strlen($value)>$max_length) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the " .
-                            "validation: It's length must be smaller than ".$max_length."  ");
-                    }
-                }
-                if ($min_length !== null) {
-                    if (strlen($value)<$min_length) {
-                        throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                            "validation: It's length must be longer than ".$min_length."  ");
-                    }
-                }
-                break;
-        }
-        if ($in_options !== null) {
-            if (!in_array($value, $in_options)) {
-                throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the validation: ".
-                    "It's length must be one of the these values: ".implode(", ", $in_options)."  ");
-            }
-        }
-
-        return $value;
-    }
-    
-    private static function filterValidate($input_type, $key, $value, $format)
-    {
-        $filter_check = null;
-        $validation = null;
-        switch ($input_type) {
-            case 'mail':
-                $filter_check = filter_var($value, FILTER_VALIDATE_EMAIL);
-                $validation = 'INVALID_EMAIL_ADDRESS';
-
-                break;
-            case 'bool':
-                $filter_check = filter_var($value, FILTER_VALIDATE_BOOLEAN);
-                $validation = 'INVALID_BOOLEAN_VALUE';
-                break;
-            case 'url':
-                $filter_check = filter_var($value, FILTER_VALIDATE_URL);
-                $validation = 'INVALID_URL';
-                break;
-            case 'ip':
-                $filter_check = filter_var($value, FILTER_VALIDATE_IP);
-                $validation = 'INVALID_IP_ADDRESS';
-                break;
-            case 'mac_address':
-                $filter_check = filter_var($value, FILTER_VALIDATE_MAC);
-                $validation = 'INVALID_MAC_ADDRESS';
-                break;
-            case 'date':
-                $regex = "/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
-                $options = array("options"=>array("regexp"=> $regex));
-                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
-                $validation = 'INVALID_DATE_FORMAT';
-                break;
-            case 'time':
-                $regex = "/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])$/";
-                $options = array("options"=>array("regexp"=> $regex));
-                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
-                $validation = 'INVALID_TIME_FORMAT';
-                break;
-            case 'datetime':
-                $date_part = "[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])";
-                $time_part = "([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])";
-                $regex = "/^".$date_part." ".$time_part."$/";
-                $options = array("options"=>array("regexp"=> $regex));
-                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
-                $validation = 'INVALID_DATETIME_FORMAT';
-                break;
-            case 'regex':
-                $regex = "/^".$format."$/";
-                $options = array("options"=>array("regexp"=> $regex));
-                $filter_check = filter_var($value, FILTER_VALIDATE_REGEXP, $options);
-                $validation = 'INVALID_FORMAT';
-                break;
-        }
-        if ($filter_check === false) {
-            throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
-                "validation: ".$validation);
-        }
-        return $filter_check;
-    }
-
-    /**
-     * @param mixed     $value
-     * @param array     $my_model
      *
      * @return mixed
      */
-    public static function sanitizeDocItem($value, $my_model)
+    private static function sanitizeDocItem($value, $my_model)
     {
         $type = isset($my_model['_type']) ? $my_model['_type'] : 'string';
         $input_type = isset($my_model['_input_type']) ? $my_model['_input_type'] : null;
@@ -334,6 +331,7 @@ class ModelUtils
 
         return $value;
     }
+    
     private static function setMaxMin($type, $value, $min_length, $max_length){
         switch ($type) {
             case 'integer':
@@ -345,13 +343,11 @@ class ModelUtils
                     $value = $max_length;
                 }
                 return $value;
-                break;
             case 'string':
                 if ($max_length !== null && strlen($value)>$max_length ) {
                     $value = substr($value, 0, $max_length);
                 }
                 return $value;
-                break;
             default:
                 return $value;
         }
@@ -365,7 +361,7 @@ class ModelUtils
      * @param mixed     $value
      * @return string
      */
-    public static function getType($value)
+    private static function getType($value)
     {
         return [
             'boolean' => 'boolean',
