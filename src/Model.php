@@ -4,14 +4,13 @@ namespace ModelUtils;
 
 class Model
 {
-
     public $config_yaml = "";
     public $schema = [];
     public $type = "basic"; // Possible options are basic, cache, search
     public $collection_name = "";
     public $data_file = null;
     public $field_attributes = [
-        'type' => null,
+        '_type' => null,
         '_input_type' => null,
         '_min_length' => null,
         '_max_length' => null,

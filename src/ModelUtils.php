@@ -14,6 +14,16 @@ use Crisu83\ShortId\ShortId;
 
 class ModelUtils
 {
+    static protected $field_attributes = [
+        '_type' => null,
+        '_input_type' => null,
+        '_min_length' => null,
+        '_max_length' => null,
+        '_in_options' => null,
+        '_input_format' => null,
+        '_required' => null
+    ];
+    
     /**
      * Validate given documents
      *
@@ -74,8 +84,7 @@ class ModelUtils
      */
     private static function validateDocItem($value, $my_model, $key)
     {
-
-    
+        $my_model = self::setDefaultModelAttributes($my_model);
         if (self::getType($value) != $my_model['_type']) {
             return false;
         }
@@ -282,6 +291,11 @@ class ModelUtils
         return $new_doc;
     }
 
+    private static function setDefaultModelAttributes($my_model){
+        
+        return array_merge(static::$field_attributes, $my_model);
+    }
+    
     /**
      * @param mixed     $value
      * @param array     $my_model
@@ -290,6 +304,7 @@ class ModelUtils
      */
     private static function sanitizeDocItem($value, $my_model)
     {
+        $my_model = self::setDefaultModelAttributes($my_model);
         $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         if (($my_model['_input_type'] == 'timestamp') && ($value == 'now')) {
             $value = time();
