@@ -41,10 +41,10 @@ class Model extends ModelUtils
         return $this->fitDocToModel($this->schema, $doc);
     }
 
-    public function install($db_conn)
+    public function install($dbConn)
     {
-        $db_conn->drop($this->collectionName, $this->schema);
-        $db_conn->create($this->collectionName, $this->schema);
+        $dbConn->drop($this->collectionName, $this->schema);
+        $dbConn->create($this->collectionName, $this->schema);
         $indexes = [];
         foreach ($this->schema as $field => $fconfig) {
             if ($fconfig['_index'] === true) {
@@ -65,12 +65,12 @@ class Model extends ModelUtils
                 foreach ($data as $item) {
                     $item = $this->setModelDefaults($this->schema, $item);
                     $doc = $this->validateDoc($this->schema, $item);
-                    $db_conn->insert($this->collectionName, $doc);
+                    $dbConn->insert($this->collectionName, $doc);
                 }
             }
         }
         if (count($indexes)>0) {
-            $db_conn->createIndexes($this->collectionName, $indexes);
+            $dbConn->createIndexes($this->collectionName, $indexes);
         }
     }
 }

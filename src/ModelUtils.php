@@ -121,11 +121,11 @@ class ModelUtils
         }
     }
     
-    private static function filterValidate($input_type, $key, $value, $format)
+    private static function filterValidate($inputType, $key, $value, $format)
     {
         $filter_check = null;
         $validation = null;
-        switch ($input_type) {
+        switch ($inputType) {
             case 'mail':
                 $filter_check = filter_var($value, FILTER_VALIDATE_EMAIL);
                 $validation = 'INVALID_EMAIL_ADDRESS';
