@@ -14,7 +14,7 @@ use Crisu83\ShortId\ShortId;
 
 class ModelUtils
 {
-    static protected $field_attributes = [
+    static protected $fieldAttributes = [
         '_type' => null,
         '_input_type' => null,
         '_min_length' => null,
@@ -31,89 +31,89 @@ class ModelUtils
     /**
      * Validate given documents
      *
-     * @param array     $my_model
-     * @param array     $my_doc
-     * @param string    $my_key
+     * @param array     $myModel
+     * @param array     $myDoc
+     * @param string    $myKey
      * @return array
      * @throws \Exception
      */
-    public static function validateDoc($my_model, $my_doc, $my_key = null)
+    public static function validateDoc($myModel, $myDoc, $myKey = null)
     {
-        $my_keys = array_keys($my_doc);
-        foreach ($my_keys as $key) {
+        $myKeys = array_keys($myDoc);
+        foreach ($myKeys as $key) {
             
-            $my_doc_key_type = self::getType($my_doc[$key]);
-            $v_key = $key;
-            if ($my_key !== null) {
-                $v_key = strval($my_key).".".strval($key);
+            $myDoc_key_type = self::getType($myDoc[$key]);
+            $vKey = $key;
+            if ($myKey !== null) {
+                $vKey = strval($myKey).".".strval($key);
             }
             // Does doc has a array that does not exist in model definition.
-            if (!isset($my_model[$key])) {
-                throw new \Exception("Error for key '".$v_key."' that does not exist in the model");
+            if (!isset($myModel[$key])) {
+                throw new \Exception("Error for key '".$vKey."' that does not exist in the model");
             } // Is the value of the array[key] again another array?
-            elseif ($my_doc_key_type == "array") {
+            elseif ($myDoc_key_type == "array") {
                 // Validate this array too.
-                $my_doc[$key] = self::validateDoc($my_model[$key], $my_doc[$key], $v_key);
-                if (self::getType($my_doc[$key]) != "array") {
-                    return $my_doc[$key];
+                $myDoc[$key] = self::validateDoc($myModel[$key], $myDoc[$key], $vKey);
+                if (self::getType($myDoc[$key]) != "array") {
+                    return $myDoc[$key];
                 }
             } // Is the value of the array[key] have same variable type
                 //that stated in the definition of the model array.
-            elseif ($my_doc_key_type != $my_model[$key]['_type']) {
-                throw new \Exception("Error for key '".$v_key."'".", ".$my_doc_key_type.
-                    " given but it must be ".$my_model[$key]['_type']);
+            elseif ($myDoc_key_type != $myModel[$key]['_type']) {
+                throw new \Exception("Error for key '".$vKey."'".", ".$myDoc_key_type.
+                    " given but it must be ".$myModel[$key]['_type']);
             } else {
-                $my_doc[$key] = self::validateDocItem($my_doc[$key], $my_model[$key], $v_key);
+                $myDoc[$key] = self::validateDocItem($myDoc[$key], $myModel[$key], $vKey);
             }
         }
-        return $my_doc;
+        return $myDoc;
     }
     
     /**
      * @param mixed     $value
-     * @param array     $my_model
+     * @param array     $myModel
      * @param string    $key
      *
      * @return mixed
      * @throws \Exception
      */
-    private static function validateDocItem($value, $my_model, $key)
+    private static function validateDocItem($value, $myModel, $key)
     {
-        $my_model = self::setDefaultModelAttributes($my_model);
-        if (self::getType($value) != $my_model['_type']) {
+        $myModel = self::setDefaultModelAttributes($myModel);
+        if (self::getType($value) != $myModel['_type']) {
             return false;
         }
-        if ($my_model['_input_type'] !== null) {
-            self::filterValidate($my_model['_input_type'], $key, $value, $my_model['_input_format']);
+        if ($myModel['_input_type'] !== null) {
+            self::filterValidate($myModel['_input_type'], $key, $value, $myModel['_input_format']);
         }
-        self::checkMinMaxInOptions($my_model['_type'], $key, $value, $my_model['_min_length'], $my_model['_max_length'], $my_model['_in_options']);
+        self::checkMinMaxInOptions($myModel['_type'], $key, $value, $myModel['_min_length'], $myModel['_max_length'], $myModel['_in_options']);
         return $value;
     }
     
-    private static function checkMinMaxInOptions($type, $key, $value, $min_length, $max_length, $in_options)
+    private static function checkMinMaxInOptions($type, $key, $value, $minLength, $maxLength, $inOptions)
     {
         $error = '';
         switch ($type) {
             case 'integer':
             case 'float':
-                if ($min_length !== null && ($value<$min_length)) {
-                    $error = "validation: Must be bigger than ".$min_length;
+                if ($minLength !== null && ($value<$minLength)) {
+                    $error = "validation: Must be bigger than ".$minLength;
                 }
-                if ($max_length !== null && ($value>$max_length)) {
-                    $error = "validation: Must be smallerr than ".$max_length;
+                if ($maxLength !== null && ($value>$maxLength)) {
+                    $error = "validation: Must be smallerr than ".$maxLength;
                 }
                 break;
             default:
-                if ($max_length !== null && (strlen($value)>$max_length)) {
-                    $error = "validation: It's length must be smaller than ".$max_length;
+                if ($maxLength !== null && (strlen($value)>$maxLength)) {
+                    $error = "validation: It's length must be smaller than ".$maxLength;
                 }
-                if ($min_length !== null && (strlen($value)<$min_length)) {
-                    $error = "validation: It's length must be longer than ".$min_length;
+                if ($minLength !== null && (strlen($value)<$minLength)) {
+                    $error = "validation: It's length must be longer than ".$minLength;
                 }
                 break;
         }
-        if ($in_options !== null && (!in_array($value, $in_options))) {
-            $error = "It's value must be one of the these values: ".implode(", ", $in_options);
+        if ($inOptions !== null && (!in_array($value, $inOptions))) {
+            $error = "It's value must be one of the these values: ".implode(", ", $inOptions);
         }
         if ($error != '') {
             throw new \Exception("Error for value '".$value."' for '".$key."' couldn't pass the ".
@@ -184,151 +184,151 @@ class ModelUtils
     /**
      * Fit document to given Model
      *
-     * @param array     $my_model
-     * @param array     $my_doc
+     * @param array     $myModel
+     * @param array     $myDoc
      * @return array
      */
-    public static function fitDocToModel($my_model, $my_doc)
+    public static function fitDocToModel($myModel, $myDoc)
     {
-        $my_keys = array_keys($my_doc);
-        foreach ($my_keys as $key) {
+        $myKeys = array_keys($myDoc);
+        foreach ($myKeys as $key) {
             // If array has a key that is not presented in the model definition, unset it .
-            if (!isset($my_model[$key])) {
-                unset($my_doc[$key]);
+            if (!isset($myModel[$key])) {
+                unset($myDoc[$key]);
             } // If array[$key] is again an array, recursively fit this array too .
-            elseif (self::getType($my_doc[$key]) == "array" && !isset($my_model[$key]['_type'])) {
-                $my_doc[$key] = self::fitDocToModel($my_model[$key], $my_doc[$key]);
+            elseif (self::getType($myDoc[$key]) == "array" && !isset($myModel[$key]['_type'])) {
+                $myDoc[$key] = self::fitDocToModel($myModel[$key], $myDoc[$key]);
                 // If returned value is not an array, return it .
-                if (self::getType($my_doc[$key]) != "array") {
-                    return $my_doc[$key];
+                if (self::getType($myDoc[$key]) != "array") {
+                    return $myDoc[$key];
                 }
-            } elseif (self::getType($my_doc[$key]) == "array" && $my_model[$key]['_type'] != "array") {
-                $my_doc[$key] = $my_model[$key]['_default'];
+            } elseif (self::getType($myDoc[$key]) == "array" && $myModel[$key]['_type'] != "array") {
+                $myDoc[$key] = $myModel[$key]['_default'];
             } // If array[key] is not an array and not has same variable type that stated in the model definition .
             else {
-                $my_doc[$key] = self::sanitizeDocItem($my_doc[$key], $my_model[$key]);
+                $myDoc[$key] = self::sanitizeDocItem($myDoc[$key], $myModel[$key]);
             }
         }
 
-        return $my_doc;
+        return $myDoc;
     }
 
     /**
-     * @param array     $my_model
-     * @param array     $my_doc
+     * @param array     $myModel
+     * @param array     $myDoc
      *
      * @return array
      */
-    public static function setModelDefaults($my_model, $my_doc)
+    public static function setModelDefaults($myModel, $myDoc)
     {
-        $my_keys = array_keys($my_model);
-        $new_doc = [];
-        foreach ($my_keys as $key) {
-            $item_keys = array_keys($my_model[$key]);
-            // If one of the keys of $my_model[$key] is _type this is a definition, not a defined key
+        $myKeys = array_keys($myModel);
+        $newDoc = [];
+        foreach ($myKeys as $key) {
+            $item_keys = array_keys($myModel[$key]);
+            // If one of the keys of $myModel[$key] is _type this is a definition, not a defined key
             if (in_array("_type", $item_keys)) {
                 // If array does not have this key, set the default value .
-                if (!isset($my_doc[$key])) {
-                    if (isset($my_model[$key]['_input_type'])) {
-                        switch ($my_model[$key]['_input_type']) {
+                if (!isset($myDoc[$key])) {
+                    if (isset($myModel[$key]['_input_type'])) {
+                        switch ($myModel[$key]['_input_type']) {
                             case 'uid':
                                     $shortid = ShortId::create();
-                                    $new_doc[$key] = $shortid->generate();
+                                    $newDoc[$key] = $shortid->generate();
                                 break;
                             case 'date':
-                                if ($my_model[$key]['_default'] == 'today') {
-                                    $new_doc[$key] = date("Y-m-d");
+                                if ($myModel[$key]['_default'] == 'today') {
+                                    $newDoc[$key] = date("Y-m-d");
                                 } else {
-                                    $new_doc[$key] = $my_model[$key]['_default'];
+                                    $newDoc[$key] = $myModel[$key]['_default'];
                                 }
                                 break;
                             case 'timestamp':
-                                $model_default = $my_model[$key]['_default'];
-                                $model_type = $my_model[$key]['_type'];
+                                $model_default = $myModel[$key]['_default'];
+                                $model_type = $myModel[$key]['_type'];
                                 if (($model_default == "now") && ($model_type == "integer")) {
-                                    $new_doc[$key] = time();
+                                    $newDoc[$key] = time();
                                 } elseif ($model_default == "now" && ($model_type == "string")) {
-                                    $new_doc[$key] = date("Y-m-d H:i:s");
+                                    $newDoc[$key] = date("Y-m-d H:i:s");
                                 } else {
-                                    $new_doc[$key] = $model_default;
+                                    $newDoc[$key] = $model_default;
                                 }
                                 break;
                     
                             default:
-                                $new_doc[$key] = $my_model[$key]['_default'];
+                                $newDoc[$key] = $myModel[$key]['_default'];
                         }
                     } else {
-                        $new_doc[$key] = $my_model[$key]['_default'];
+                        $newDoc[$key] = $myModel[$key]['_default'];
                     }
                 } // If array has this key
                 else {
                     // If model definition stated this key's default value is not Null
                     // and has a wrong variable type, fix it.
-                    if ($my_model[$key]['_default'] !== null) {
-                        $key_type = self::getType($my_doc[$key]);
-                        if ($key_type != $my_model[$key]['_type'] && $key_type == "array") {
-                            $my_doc[$key] = $my_model[$key]['_default'];
+                    if ($myModel[$key]['_default'] !== null) {
+                        $key_type = self::getType($myDoc[$key]);
+                        if ($key_type != $myModel[$key]['_type'] && $key_type == "array") {
+                            $myDoc[$key] = $myModel[$key]['_default'];
                         }
-                        settype($my_doc[$key], $my_model[$key]['_type']);
+                        settype($myDoc[$key], $myModel[$key]['_type']);
                     }
-                    $new_doc[$key] = $my_doc[$key];
+                    $newDoc[$key] = $myDoc[$key];
                 }
-                $new_doc[$key] = self::sanitizeDocItem($new_doc[$key], $my_model[$key]);
+                $newDoc[$key] = self::sanitizeDocItem($newDoc[$key], $myModel[$key]);
             } // If one of the keys is not _type, this is a defined key, recursively get sub keys .
             else {
-                if (!isset($my_doc[$key])) {
-                    $my_doc[$key] = "";
+                if (!isset($myDoc[$key])) {
+                    $myDoc[$key] = "";
                 }
-                $new_doc[$key] = self::setModelDefaults($my_model[$key], $my_doc[$key]);
+                $newDoc[$key] = self::setModelDefaults($myModel[$key], $myDoc[$key]);
             }
         }
-        return $new_doc;
+        return $newDoc;
     }
 
-    private static function setDefaultModelAttributes($my_model)
+    private static function setDefaultModelAttributes($myModel)
     {
-        return array_merge(static::$field_attributes, $my_model);
+        return array_merge(static::$fieldAttributes, $myModel);
     }
     
     /**
      * @param mixed     $value
-     * @param array     $my_model
+     * @param array     $myModel
      *
      * @return mixed
      */
-    private static function sanitizeDocItem($value, $my_model)
+    private static function sanitizeDocItem($value, $myModel)
     {
-        $my_model = self::setDefaultModelAttributes($my_model);
+        $myModel = self::setDefaultModelAttributes($myModel);
         $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        if (($my_model['_input_type'] == 'timestamp') && ($value == 'now')) {
+        if (($myModel['_input_type'] == 'timestamp') && ($value == 'now')) {
             $value = time();
         }
-        settype($value, $my_model['_type']);
-        $value = self::setMaxMinInOptions($my_model['_type'], $value, $my_model['_min_length'], $my_model['_max_length'], $my_model['_in_options']);
+        settype($value, $myModel['_type']);
+        $value = self::setMaxMinInOptions($myModel['_type'], $value, $myModel['_min_length'], $myModel['_max_length'], $myModel['_in_options']);
         return $value;
     }
     
-    private static function setMaxMinInOptions($type, $value, $min_length, $max_length, $in_options)
+    private static function setMaxMinInOptions($type, $value, $minLength, $maxLength, $inOptions)
     {
         switch ($type) {
             case 'integer':
             case 'float':
-                if ($min_length !== null && ($value<$min_length)) {
-                    $value = $min_length;
+                if ($minLength !== null && ($value<$minLength)) {
+                    $value = $minLength;
                 }
-                if ($max_length !== null && ($value>$max_length)) {
-                    $value = $max_length;
+                if ($maxLength !== null && ($value>$maxLength)) {
+                    $value = $maxLength;
                 }
                 break;
             case 'string':
-                if ($max_length !== null && strlen($value)>$max_length) {
-                    $value = substr($value, 0, $max_length);
+                if ($maxLength !== null && strlen($value)>$maxLength) {
+                    $value = substr($value, 0, $maxLength);
                 }
                 break;
 
         }
-        if ($in_options !== null && (!in_array($value, $in_options))) {
-            $value = $in_options[0]; // First value of the in_options array is assumed to be the default value .
+        if ($inOptions !== null && (!in_array($value, $inOptions))) {
+            $value = $inOptions[0]; // First value of the in_options array is assumed to be the default value .
         }
         return $value;
     }

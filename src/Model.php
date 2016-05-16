@@ -4,21 +4,25 @@ namespace ModelUtils;
 
 class Model extends ModelUtils
 {
-    public $config_yaml = "";
+    public $configYaml = "";
     public $schema = [];
     public $type = "basic"; // Possible options are basic, cache, search
-    public $collection_name = "";
-    public $data_file = null;
+    public $collectionName = "";
+    public $dataFile = null;
 
 
     public function __construct()
     {
-        $config = yaml_parse(trim($this->config_yaml));
-        $this->schema = $config['schema'];
-        $this->collection_name = $config['collection_name'];
-        $this->type = (isset($config['type'])) ? $config['type'] : "basic";
-        $this->data_file = (isset($config['data_file'])) ? $config['data_file'] : null;
+        $this->create();
+    }
 
+    public function create()
+    {
+        $config = yaml_parse(trim($this->configYaml));
+        $this->schema = $config['schema'];
+        $this->collectionName = $config['collection_name'];
+        $this->type = (isset($config['type'])) ? $config['type'] : "basic";
+        $this->dataFile = (isset($config['data_file'])) ? $config['data_file'] : null;
     }
 
     public function validate($doc)
@@ -39,8 +43,8 @@ class Model extends ModelUtils
 
     public function install($db_conn)
     {
-        $db_conn->drop($this->collection_name, $this->schema);
-        $db_conn->create($this->collection_name, $this->schema);
+        $db_conn->drop($this->collectionName, $this->schema);
+        $db_conn->create($this->collectionName, $this->schema);
         $indexes = [];
         foreach ($this->schema as $field => $fconfig) {
             if ($fconfig['_index'] === true) {
@@ -55,18 +59,18 @@ class Model extends ModelUtils
                 $indexes[] = $index;
             }
         }
-        if ($this->data_file !== null) {
-            if (file_exists(BASE_DIR.$this->data_file)) {
-                $data = json_decode(file_get_contents(BASE_DIR.$this->data_file), true);
+        if ($this->dataFile !== null) {
+            if (file_exists(BASE_DIR.$this->dataFile)) {
+                $data = json_decode(file_get_contents(BASE_DIR.$this->dataFile), true);
                 foreach ($data as $item) {
                     $item = $this->setModelDefaults($this->schema, $item);
                     $doc = $this->validateDoc($this->schema, $item);
-                    $db_conn->insert($this->collection_name, $doc);
+                    $db_conn->insert($this->collectionName, $doc);
                 }
             }
         }
         if (count($indexes)>0) {
-            $db_conn->createIndexes($this->collection_name, $indexes);
+            $db_conn->createIndexes($this->collectionName, $indexes);
         }
     }
 }
