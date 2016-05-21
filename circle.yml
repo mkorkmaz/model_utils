@@ -12,4 +12,4 @@ deployment:
   coverage:
     branch: master
     commands:
-      - php bin/codacycoverage clover
+      - php vendor/bin/codacycoverage clover
