@@ -3,4 +3,3 @@ dependencies:
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar selfupdate
     - php composer.phar install -n
-    - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
