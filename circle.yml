@@ -3,8 +3,7 @@ dependencies:
     - mkdir -p build/logs
     - curl -s http://getcomposer.org/installer | php
     - php composer.phar install -n
-    - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
-
+    - sed -i 's/^;//' /opt/circleci/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
 test:
   post:
     - php vendor/bin/phpunit
