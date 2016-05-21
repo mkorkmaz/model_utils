@@ -1,15 +1,6 @@
 dependencies:
   pre:
-    - mkdir -p build/logs
     - curl -s http://getcomposer.org/installer | php
+    - php composer.phar selfupdate
     - php composer.phar install -n
-    - sed -i 's/^;//' /opt/circleci/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
-test:
-  post:
-    - php vendor/bin/phpunit
-
-deployment:
-  coverage:
-    branch: master
-    commands:
-      - php vendor/bin/codacycoverage clover
+    - sed -i 's/^;//' ~/.phpenv/versions/$(phpenv global)/etc/conf.d/xdebug.ini
