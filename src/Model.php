@@ -17,7 +17,7 @@ class Model extends ModelUtils
 
     public function create()
     {
-        $this->schema = parse_ini_string(trim($this->schema_config));
+        $this->schema = parse_ini_string(trim($this->schema_config), true);
         $this->dataFile = (isset($config['data_file'])) ? $config['data_file'] : null;
     }
 
