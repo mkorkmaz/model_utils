@@ -4,10 +4,9 @@ namespace ModelUtils;
 
 class Model extends ModelUtils
 {
-    public $configYaml = "";
     public $schema = [];
     public $type = "basic"; // Possible options are basic, cache, search
-    public $collectionName = "";
+    public $collectionName = null;
     public $dataFile = null;
 
 
@@ -18,10 +17,7 @@ class Model extends ModelUtils
 
     public function create()
     {
-        $config = yaml_parse(trim($this->configYaml));
-        $this->schema = $config['schema'];
-        $this->collectionName = $config['collection_name'];
-        $this->type = (isset($config['type'])) ? $config['type'] : "basic";
+        $this->schema = parse_ini_string(trim($this->schema_config));
         $this->dataFile = (isset($config['data_file'])) ? $config['data_file'] : null;
     }
 
@@ -41,7 +37,7 @@ class Model extends ModelUtils
         return $this->fitDocToModel($this->schema, $doc);
     }
 
-    public function install($dbConn)
+    public function install($dbConn, $baseDir)
     {
         $dbConn->drop($this->collectionName, $this->schema);
         $dbConn->create($this->collectionName, $this->schema);
@@ -60,8 +56,8 @@ class Model extends ModelUtils
             }
         }
         if ($this->dataFile !== null) {
-            if (file_exists(BASE_DIR.$this->dataFile)) {
-                $data = json_decode(file_get_contents(BASE_DIR.$this->dataFile), true);
+            if (file_exists($baseDir.$this->dataFile)) {
+                $data = json_decode(file_get_contents($baseDir.$this->dataFile), true);
                 foreach ($data as $item) {
                     $item = $this->setModelDefaults($this->schema, $item);
                     $doc = $this->validateDoc($this->schema, $item);

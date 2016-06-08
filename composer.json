@@ -1,43 +1,43 @@
 {
-    "name": "mkorkmaz/model_utils",
-    "type": "library",
-    "description": "A simple PHP class for validating variable types, fixing, sanitising and setting default values for a model definition encoded as an array.",
-    "keywords": ["utility","model"],
-    "homepage": "https://github.com/mkorkmaz/model_utils",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Mehmet Korkmaz",
-            "email": "mehmet@mkorkmaz.com",
-            "homepage": "https://mkorkmaz.com"
-        },
-        {
-            "name": "Haydar KULEKCI",
-            "email": "haydarkulekci@gmail.com",
-            "homepage": "https://kulekci.net"
-        }
-    ],
-    "require": {
-        "php": ">=5.5",
-        "crisu83/shortid": "*"
-        
+  "name": "mkorkmaz/model_utils",
+  "type": "library",
+  "description": "A simple PHP class for validating variable types, fixing, sanitising and setting default values for a model definition encoded as an array.",
+  "keywords": ["utility","model"],
+  "homepage": "https://github.com/mkorkmaz/model_utils",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mehmet Korkmaz",
+      "email": "mehmet@mkorkmaz.com",
+      "homepage": "https://mkorkmaz.com"
     },
-    "require-dev": {
-        "phpunit/phpunit": "4.8.*",
-        "codacy/coverage": "dev-master"
-    },
-    
-    "autoload": {
-        "psr-4": {
-            "ModelUtils\\": "src/"
-        }
-    },
-    "scripts": {
-        "test": [
-            "php vendor/bin/phpcs",
-            "php vendor/bin/phpunit"
-        ],
-        "phpunit": "php vendor/bin/phpunit",
-        "phpcs": "php vendor/bin/phpcs"
+    {
+      "name": "Haydar KULEKCI",
+      "email": "haydarkulekci@gmail.com",
+      "homepage": "https://kulekci.net"
     }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "crisu83/shortid": "*",
+    "ezyang/htmlpurifier": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.8.*",
+    "codacy/coverage": "dev-master"
+  },
+  
+  "autoload": {
+    "psr-4": {
+      "ModelUtils\\": "src/"
+    }
+  },
+  "scripts": {
+    "test": [
+      "php vendor/bin/phpcs",
+      "php vendor/bin/phpunit"
+    ],
+    "phpunit": "php vendor/bin/phpunit",
+    "phpcs": "php vendor/bin/phpcs"
+  }
 }
