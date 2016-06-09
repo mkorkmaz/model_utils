@@ -8,6 +8,7 @@ class Model extends ModelUtils
     public $type = "basic"; // Possible options are basic, cache, search
     public $collectionName = null;
     public $dataFile = null;
+    public $schemaConfig = null;
 
 
     public function __construct()
@@ -17,7 +18,7 @@ class Model extends ModelUtils
 
     public function create()
     {
-        $this->schema = parse_ini_string(trim($this->schema_config), true);
+        $this->schema = parse_ini_string(trim($this->schemaConfig), true);
         $this->dataFile = (isset($config['data_file'])) ? $config['data_file'] : null;
     }
 
