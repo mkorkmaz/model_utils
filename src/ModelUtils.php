@@ -287,7 +287,11 @@ class ModelUtils
 
     private static function setDefaultModelAttributes($myModel)
     {
-        return array_merge(static::$fieldAttributes, $myModel);
+        $source =static::$fieldAttributes;
+        foreach ($myModel as $key => $value) {
+            $source[$key]=$value;
+        }
+        return $source;
     }
     
     /**
@@ -299,7 +303,7 @@ class ModelUtils
     private static function sanitizeDocItem($value, $myModel)
     {
         $myModel = self::setDefaultModelAttributes($myModel);
-        $value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $value = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
         if (($myModel['_input_type'] == 'timestamp') && ($value == 'now')) {
             $value = time();
         }
