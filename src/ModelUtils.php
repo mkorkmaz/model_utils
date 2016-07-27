@@ -303,7 +303,9 @@ class ModelUtils
     private static function sanitizeDocItem($value, $myModel)
     {
         $myModel = self::setDefaultModelAttributes($myModel);
-        $value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        if($myModel['_input_type']!='html'){
+            $value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+        }
         if (($myModel['_input_type'] == 'timestamp') && ($value == 'now')) {
             $value = time();
         }
