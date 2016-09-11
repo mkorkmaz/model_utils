@@ -21,6 +21,7 @@ class ModelUtilsTest extends \PHPUnit_Framework_TestCase
         $this->testData =<<<EOT
 {
     "name":     {"_type": "string",  "_input_type": null, "_min_length": 3, "_max_length": 128, "_required": true, "_index": true, "_default": "", "_ref": null, "_has_many": 0},
+    "html":     {"_type": "string",  "_input_type": "html", "_min_length": 0, "_max_length": 2048, "_required": true, "_index": true, "_default": "", "_ref": null, "_has_many": 0},
     "email":    {"_type": "string",  "_input_type": "email", "_required": true, "_index": true, "_default": "", "_ref": null, "_has_many": 0},  
     "birthday": {"_type": "string",  "_input_type": "date", "_required": true, "_index": true, "_default": "", "_ref": null, "_has_many": 0},
     "created":  {"_type": "integer", "_input_type": "timestamp" , "_required": true, "_index": true, "_default":"now", "_ref": null, "_has_many": 0},
@@ -62,6 +63,7 @@ EOT;
         $this->assertArrayHasKey('cat', $doc['profile']['pets']);
 
         $doc = ModelUtils::setModelDefaults($model, $doc);
+
         $doc = ModelUtils::validateDoc($model, $doc);
 
         $this->assertArrayHasKey('dogs', $doc['profile']['pets']);
@@ -84,7 +86,7 @@ EOT;
     public function successDataProvider()
     {
         return [
-            ['{"name": "Mehmet", "birthday": "1980-01-01", "gender":"G",  "experience": 4, "profile": {"weight":60.0,"age": 37,"pets": {"cat": 2}}}'],
+            ['{"name": "Mehmet", "birthday": "1980-01-01", "gender":"G", "html":"<a href=\'deneme.html\'><strong>hellö</strong></a>", "experience": 4, "profile": {"weight":60.0,"age": 37,"pets": {"cat": 2}}}'],
         ];
     }
 
